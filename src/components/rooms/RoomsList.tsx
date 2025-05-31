@@ -47,7 +47,7 @@ const RoomsList: React.FC<RoomsListProps> = ({ onSelectRoom, filter }) => {
       // Find active or future booking for the filtered period
       const overlappingBooking = bookings.find(booking => {
         if (booking.checkOutDateTime) return false; // Skip checked-out bookings
-        if (booking.cancelledAt) return false; //Skip cancelled bookings
+        // if (booking.cancelledAt) return false; // Skip cancelled bookings
         
         const bookingStart = parseISO(booking.bookingDate);
         const bookingEnd = addDays(bookingStart, booking.durationDays);
