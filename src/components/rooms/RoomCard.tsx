@@ -60,7 +60,7 @@ Room {room.roomNumber}</h3>
           <p className="text-sm font-medium">{currentBooking.guestName}</p>
           <div className="flex justify-between text-xs text-gray-500 mt-1">
             <span>
-              {format(parseISO(currentBooking.bookingDate), 'dd/MM/yyyy')} - 
+              {format(parseISO(currentBooking.bookingDate), 'dd/MM/yyyy')} -{' '} 
               {format(addDays(parseISO(currentBooking.bookingDate), currentBooking.durationDays), 'dd/MM/yyyy')}
             </span>
             <span>{currentBooking.durationDays} days</span>
