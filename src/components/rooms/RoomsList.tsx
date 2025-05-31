@@ -45,28 +45,37 @@ const RoomsList: React.FC<RoomsListProps> = ({ onSelectRoom, filter }) => {
       const isAvailable = isRoomAvailable(room.id, startDate, endDate);
       
       // Find active or future booking for the filtered period
-      const overlappingBooking = bookings.find(booking => {
-        if (booking.checkOutDateTime) return false; // Skip checked-out bookings
-        if (booking.cancelledAt) return false; // Skip cancelled bookings
-        
-        const bookingStart = parseISO(booking.bookingDate);
-        const bookingEnd = addDays(bookingStart, booking.durationDays);
-        const filterStart = parseISO(startDate);
-        const filterEnd = parseISO(endDate);
-        
-        return isWithinInterval(filterStart, { start: bookingStart, end: bookingEnd }) ||
-               isWithinInterval(filterEnd, { start: bookingStart, end: bookingEnd }) ||
-               (filterStart <= bookingStart && filterEnd >= bookingEnd);
-      });
+const overlappingBookings = bookings.filter(booking => {
+  if (booking.checkOutDateTime) return false;
+  if (booking.cancelledAt) return false;
+
+  const bookingStart = parseISO(booking.bookingDate);
+  const bookingEnd = addDays(bookingStart, booking.durationDays);
+  const filterStart = parseISO(startDate);
+  const filterEnd = parseISO(endDate);
+
+  return (
+    isWithinInterval(filterStart, { start: bookingStart, end: bookingEnd }) ||
+    isWithinInterval(filterEnd, { start: bookingStart, end: bookingEnd }) ||
+    (filterStart <= bookingStart && filterEnd >= bookingEnd)
+  );
+});
+
+// Sort by bookingDate ascending to get the earliest booking
+overlappingBookings.sort((a, b) => new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime());
+
+const earliestBooking = overlappingBookings[0];
+
       
-      if (isAvailable || !overlappingBooking) {
-        available.push(room);
-      } else {
-        occupiedOrBooked.push({
-          room,
-          overlappingBooking
-        });
-      }
+if (isAvailable || !earliestBooking) {
+  available.push(room);
+} else {
+  occupiedOrBooked.push({
+    room,
+    overlappingBooking: earliestBooking
+  });
+}
+
     });
 
     return { 
