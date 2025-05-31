@@ -50,7 +50,7 @@ const overlappingBookings = bookings.filter(booking => {
   if (booking.cancelledAt) return false;
 
   const bookingStart = parseISO(booking.bookingDate);
-  const bookingEnd = addDays(bookingStart, booking.durationDays);
+  const bookingEnd = addDays(bookingStart, booking.durationDays -1);
   const filterStart = parseISO(startDate);
   const filterEnd = parseISO(endDate);
 
