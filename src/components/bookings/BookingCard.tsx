@@ -12,6 +12,7 @@ interface BookingCardProps {
   showRoom?: boolean;
   roomNumber?: string;
   onUpdate?: () => void;
+  variant?: 'default' | 'list';  // ✅ new prop
 }
 
 const BookingCard: React.FC<BookingCardProps> = ({ booking, isActive, showRoom = false, roomNumber, onUpdate }) => {
