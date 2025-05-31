@@ -64,7 +64,7 @@ const overlappingBookings = bookings.filter(booking => {
 // Sort by bookingDate ascending to get the earliest booking
 overlappingBookings.sort((a, b) => new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime());
 
-const earliestBooking = overlappingBookings[0];
+const earliestBooking = overlappingBookings[1];
 
       
 if (isAvailable || !earliestBooking) {
