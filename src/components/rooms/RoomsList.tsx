@@ -47,6 +47,9 @@ const RoomsList: React.FC<RoomsListProps> = ({ onSelectRoom, filter }) => {
     const available: Room[] = [];
     const occupiedOrBooked: { room: Room; overlappingBooking?: Booking }[] = [];
 
+    const filterStart = parseISO(startDate);
+    const filterEnd = parseISO(endDate);
+    
     filteredRooms.forEach(room => {
       const bookings = getBookingsForRoom(room.id);
       const isAvailable = isRoomAvailable(room.id, startDate, endDate);
