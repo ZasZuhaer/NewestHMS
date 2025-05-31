@@ -11,7 +11,8 @@ const RequestsPage: React.FC = () => {
   const { currentUser } = useAuthStore();
   const { getRoomById } = useRoomStore();
   
-  const requests = getCancellationRequests();
+  const requests = getCancellationRequests().sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime());
+
   
   const handleApprove = (requestId: string) => {
     if (!currentUser) return;
