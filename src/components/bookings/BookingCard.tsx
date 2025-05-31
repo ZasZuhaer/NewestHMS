@@ -15,7 +15,14 @@ interface BookingCardProps {
   variant?: 'default' | 'list';  // ✅ new prop
 }
 
-const BookingCard: React.FC<BookingCardProps> = ({ booking, isActive, showRoom = false, roomNumber, onUpdate }) => {
+const BookingCard: React.FC<BookingCardProps> = ({
+  booking,
+  isActive,
+  showRoom = false,
+  roomNumber,
+  onUpdate,
+  variant = 'default', // ✅ default value
+}) => {
   const { checkIn, checkOut, updateBooking, getCurrentBookingsForRoom, isRoomAvailable, requestCancellation, getCancellationRequestForBooking, cancelBooking } = useBookingStore();
   const { getCurrentUserRole, currentUser } = useAuthStore();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
