@@ -5,6 +5,13 @@ import { useRoomStore } from '../../store/useRoomStore';
 import { useBookingStore } from '../../store/useBookingStore';
 import { format, addDays, parseISO, isWithinInterval } from 'date-fns';
 
+// ✅ NEW HELPER FUNCTION
+function getBookingOccupiedInterval(booking: Booking) {
+  const start = parseISO(booking.bookingDate);
+  const end = addDays(start, booking.durationDays - 1);
+  return { start, end };
+}
+
 interface RoomsListProps {
   onSelectRoom: (roomId: string) => void;
   filter: RoomFilter;
