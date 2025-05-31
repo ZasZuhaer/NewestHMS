@@ -50,7 +50,7 @@ const RoomsList: React.FC<RoomsListProps> = ({ onSelectRoom, filter }) => {
         if (booking.cancelledAt) return false; // Skip cancelled bookings
 
         const bookingStart = parseISO(booking.bookingDate);
-        const bookingEnd = addDays(bookingStart, booking.durationDays);
+        const bookingEnd = addDays(bookingStart, booking.durationDays -1);
         const filterStart = parseISO(startDate);
         const filterEnd = parseISO(endDate);
         
