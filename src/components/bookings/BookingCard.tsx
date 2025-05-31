@@ -184,7 +184,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
   return (
     <>
       <div className={`card border ${isActive ? 'border-teal-300 bg-teal-50' : 'border-gray-200'} ${variant === 'list' ? 'flex items-center p-4' : 'p-4'}`}>
-        <div className="p-4">
+        <div className={`p-4 ${variant === 'list' ? 'flex justify-between items-center' : ''}`}>
           <div className="flex justify-between items-start mb-3">
             <div>
               <h3 className="text-lg font-semibold">{booking.guestName}</h3>
