@@ -211,16 +211,16 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
        
 
-    <div className="flex flex-col gap-1"> 
+    <div className="flex flex-col gap-1">
 
       <h3 className="text-md font-semibold">Room {roomNumber ?? booking.roomId}</h3>
       
-      <div className="flex items-center gap-0 text-xs text-gray-600">
+      <div className="flex items-center gap-1 text-xs text-gray-600">
         <Calendar className="w-5 h-5 text-gray-400" /> 
         <span>{formatDate(booking.bookingDate)} ({booking.durationDays} days)</span>
       </div>
 
-      <div className="flex items-center gap-0 text-xs text-gray-900"> 
+      <div className="flex items-center gap-1 text-xs text-gray-900"> 
   <CreditCard className="w-5 h-5 text-gray-400" />
   <span>৳{booking.paidAmount} / ৳{booking.totalAmount}</span>
 </div>
@@ -235,7 +235,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
           )}
 
           {booking.checkOutDateTime && (
-            <div className="flex items-center text-xs text-gray-600 mt-2">
+            <div className="flex items-center text-xs text-gray-600 mt-0">
               <Clock className="h-3 w-3 mr-1" />
               <span>Checked out: {formatDateTime(booking.checkOutDateTime)}</span>
             </div>
