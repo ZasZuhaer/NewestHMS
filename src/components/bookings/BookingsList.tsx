@@ -133,7 +133,9 @@ const sortedBookings = [...bookings].sort((a, b) => {
 
   {/* Search button */}
   <button
-    onClick={() => { /* you can put your filtering logic here if needed */ }}
+    onClick={() => { setAppliedSearchTerm(searchTerm);
+    setAppliedStartDate(startDate);
+    setAppliedEndDate(endDate); }}
     className="px-4 py-2 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700"
   >
     Search
