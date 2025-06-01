@@ -168,7 +168,6 @@ const sortedBookings = [...bookings].sort((a, b) => {
       setSearchTerm('');
     setStartDate('');
     setEndDate('');
-    setAppliedSearchTerm('');
     setAppliedStartDate('');
     setAppliedEndDate('');
     }}
