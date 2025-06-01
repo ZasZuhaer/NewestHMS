@@ -94,7 +94,20 @@ const sortedBookings = [...bookings].sort((a, b) => {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center bg-white rounded-lg shadow-lg p-2 gap-2">
-  <div>
+  
+
+  <div className="flex items-center flex-1 bg-white rounded-lg">
+    <Search className="h-5 w-5 text-gray-400 ml-2 mr-1" />
+    <input
+      type="text"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      placeholder="Search by guest name, ID, phone or room number..."
+      className="flex-1 px-2 py-2 border-0 focus:ring-0 focus:outline-none"
+    />
+  </div>
+
+        <div>
     <input
       type="date"
       value={startDate}
@@ -111,17 +124,6 @@ const sortedBookings = [...bookings].sort((a, b) => {
       onChange={(e) => setEndDate(e.target.value)}
       className="px-2 py-2 border rounded-md text-sm"
       placeholder="End Date"
-    />
-  </div>
-
-  <div className="flex items-center flex-1 bg-white rounded-lg">
-    <Search className="h-5 w-5 text-gray-400 ml-2 mr-1" />
-    <input
-      type="text"
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      placeholder="Search by guest name, ID, phone or room number..."
-      className="flex-1 px-2 py-2 border-0 focus:ring-0 focus:outline-none"
     />
   </div>
 </div>
