@@ -217,7 +217,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
     <div className="flex flex-col gap-1">
 
-      <div className="flex items-center gap-1 text-lg font-semibold text-gray-700">
+      <div className="flex items-center gap-1 text-lg font-semibold">
   <Users className="w-5 h-5 text-gray-400" />
   <span>{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</span>
 </div>
