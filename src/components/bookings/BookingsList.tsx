@@ -98,6 +98,26 @@ const sortedBookings = [...bookings].sort((a, b) => {
 
   
 
+  <div className="flex items-center">
+    <label className="text-sm font-medium mr-2">Booking Date</label>
+    <input
+      type="date"
+      value={startDate}
+      onChange={(e) => setStartDate(e.target.value)}
+      className="px-2 py-2 border rounded-md text-sm"
+    />
+  </div>
+
+  <div className="flex items-center">
+    <label className="text-sm font-medium mr-2">Checkout Date</label>
+    <input
+      type="date"
+      value={endDate}
+      onChange={(e) => setEndDate(e.target.value)}
+      className="px-2 py-2 border rounded-md text-sm"
+    />
+  </div>
+
   <div className="flex items-center flex-1 bg-white rounded-lg">
     <Search className="h-5 w-5 text-gray-400 ml-2 mr-1" />
     <input
@@ -108,25 +128,26 @@ const sortedBookings = [...bookings].sort((a, b) => {
       className="flex-1 px-2 py-2 border-0 focus:ring-0 focus:outline-none"
     />
   </div>
-  <div className="flex items-center">
-      <label className="text-sm font-medium mr-2">Booking Date:</label>
-      <input
-        type="date"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-        className="px-2 py-2 border rounded-md text-sm"
-      />
-    </div>
-  
-    <div className="flex items-center">
-      <label className="text-sm font-medium mr-2">Checkout Date:</label>
-      <input
-        type="date"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-        className="px-2 py-2 border rounded-md text-sm"
-      />
-    </div>
+
+  {/* Search button */}
+  <button
+    onClick={() => { /* you can put your filtering logic here if needed */ }}
+    className="px-4 py-2 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700"
+  >
+    Search
+  </button>
+
+  {/* Clear button */}
+  <button
+    onClick={() => {
+      setSearchTerm('');
+      setStartDate('');
+      setEndDate('');
+    }}
+    className="px-4 py-2 bg-gray-300 text-gray-800 text-sm rounded-md hover:bg-gray-400"
+  >
+    Clear
+  </button>
 </div>
 
       
