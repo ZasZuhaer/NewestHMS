@@ -15,6 +15,8 @@ const BookingsList: React.FC = () => {
   
   const bookings = getAllBookings();
   const today = new Date();
+  const isSmallScreen = useIsSmallScreen();
+
   
   // Sort bookings by date (most recent first)
 const sortedBookings = [...bookings].sort((a, b) => {
