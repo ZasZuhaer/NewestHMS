@@ -107,23 +107,23 @@ const sortedBookings = [...bookings].sort((a, b) => {
     />
   </div>
 
-        <div>
+        <div className="flex flex-col">
+    <label className="text-sm font-medium mb-1">Booking Date</label>
     <input
       type="date"
       value={startDate}
       onChange={(e) => setStartDate(e.target.value)}
       className="px-2 py-2 border rounded-md text-sm"
-      placeholder="Start Date"
     />
   </div>
 
-  <div>
+  <div className="flex flex-col">
+    <label className="text-sm font-medium mb-1">Checkout Date</label>
     <input
       type="date"
       value={endDate}
       onChange={(e) => setEndDate(e.target.value)}
       className="px-2 py-2 border rounded-md text-sm"
-      placeholder="End Date"
     />
   </div>
 </div>
