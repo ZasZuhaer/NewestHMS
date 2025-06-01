@@ -96,25 +96,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
       <div className="flex flex-wrap items-center bg-white rounded-lg shadow-lg p-2 gap-2">
   
 
-  <div className="flex items-center">
-    <label className="text-sm font-medium mr-2">Booking Date</label>
-    <input
-      type="date"
-      value={startDate}
-      onChange={(e) => setStartDate(e.target.value)}
-      className="px-2 py-2 border rounded-md text-sm"
-    />
-  </div>
-
-  <div className="flex items-center">
-    <label className="text-sm font-medium mr-2">Checkout Date</label>
-    <input
-      type="date"
-      value={endDate}
-      onChange={(e) => setEndDate(e.target.value)}
-      className="px-2 py-2 border rounded-md text-sm"
-    />
-  </div>
+  
 
   <div className="flex items-center flex-1 bg-white rounded-lg">
     <Search className="h-5 w-5 text-gray-400 ml-2 mr-1" />
@@ -126,6 +108,25 @@ const sortedBookings = [...bookings].sort((a, b) => {
       className="flex-1 px-2 py-2 border-0 focus:ring-0 focus:outline-none"
     />
   </div>
+  <div className="flex items-center">
+      <label className="text-sm font-medium mr-2">Booking Date</label>
+      <input
+        type="date"
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
+        className="px-2 py-2 border rounded-md text-sm"
+      />
+    </div>
+  
+    <div className="flex items-center">
+      <label className="text-sm font-medium mr-2">Checkout Date</label>
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+        className="px-2 py-2 border rounded-md text-sm"
+      />
+    </div>
 </div>
 
       
