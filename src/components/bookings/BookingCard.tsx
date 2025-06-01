@@ -226,6 +226,10 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
     <div className="flex flex-col gap-1">
 
+      <div className="flex items-center gap-1 text-sm text-gray-500">
+        <Clock className="w-4 h-4 text-gray-400" /> 
+        <span>Checked in: {formatDate(booking.checkInDateTime)}</span>
+      </div>
       
 
     
