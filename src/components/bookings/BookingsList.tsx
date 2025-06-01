@@ -3,6 +3,7 @@ import { Booking } from '../../types';
 import BookingCard from './BookingCard';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useRoomStore } from '../../store/useRoomStore';
+import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
 import { format, parseISO, addDays } from 'date-fns';
 import { Search } from 'lucide-react';
 
