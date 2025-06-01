@@ -188,7 +188,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
 {variant === 'list' ? (
 <>
-  <div className="flex justify-between items-center gap-6">
+  <div className="flex justify-between items-center gap-2">
     {/* All info side by side */}
     <div className="flex items-center gap-4">
 
