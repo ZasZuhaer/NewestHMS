@@ -350,7 +350,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
                 </button>
                 <button
                   onClick={handleCheckOut}
-                  className="btn btn-primary w-48 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+                  className="btn btn-primary w-full bg-blue-600 hover:bg-blue-700 focus:ring-blue-500" 
                 >
                   Check Out
                 </button>
