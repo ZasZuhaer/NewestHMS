@@ -252,7 +252,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
     {/* RIGHT SIDE: Buttons stacked vertically */}
     <div className="flex flex-col gap-1 ml-auto">
       {!booking.checkInDateTime && !booking.cancelledAt && (
-        <div className="flex flex-col items-center gap-1">
+        <div className="flex flex-col items-center gap-0">
   <button onClick={handleCheckIn} className="btn btn-primary w-28">Check In</button>
 
   {(userRole === 'admin' || userRole === 'manager') && (
