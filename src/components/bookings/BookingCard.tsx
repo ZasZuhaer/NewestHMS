@@ -187,7 +187,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
         <div className={`p-4 ${variant === 'list' ? 'space-y-2' : ''}`}>
 
 {variant === 'list' ? (
-    <>
+<>
   <div className="flex justify-between items-center gap-6">
     {/* All info side by side */}
     <div className="flex items-center gap-8">
@@ -196,24 +196,29 @@ const BookingCard: React.FC<BookingCardProps> = ({
         <h3 className="text-lg font-semibold">{booking.guestName}</h3>
       </div>
 
-      <div>
-        <p className="text-sm text-gray-500">ID: {booking.nationalId}</p>
+      <div className="flex items-center gap-1 text-sm text-gray-500">
+        <User className="w-4 h-4 text-gray-400" />
+        <span>ID: {booking.nationalId}</span>
       </div>
 
-      <div>
-        <p className="text-sm text-gray-500">{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</p>
+      <div className="flex items-center gap-1 text-sm text-gray-500">
+        <Users className="w-4 h-4 text-gray-400" />
+        <span>{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</span>
       </div>
 
-      <div>
-        <p className="text-sm font-semibold">{formatDate(booking.bookingDate)} ({booking.durationDays} days)</p>
+      <div className="flex items-center gap-1 text-sm text-gray-500">
+        <Calendar className="w-4 h-4 text-gray-400" />
+        <span>{formatDate(booking.bookingDate)} ({booking.durationDays} days)</span>
       </div>
 
-      <div>
-        <p className="text-sm text-gray-500">৳{booking.totalAmount} total</p>
+      <div className="flex items-center gap-1 text-sm text-gray-500">
+        <CreditCard className="w-4 h-4 text-gray-400" />
+        <span>৳{booking.totalAmount} total</span>
       </div>
 
-      <div>
-        <p className="text-sm text-gray-500">৳{booking.paidAmount} paid</p>
+      <div className="flex items-center gap-1 text-sm text-gray-500">
+        <CreditCard className="w-4 h-4 text-gray-400" />
+        <span>৳{booking.paidAmount} paid</span>
       </div>
 
       {cancellationRequest?.status === 'pending' && (
@@ -245,6 +250,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
     </div>
   </div>
 </>
+
 
   ) : (
     <>
