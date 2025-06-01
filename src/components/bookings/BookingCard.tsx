@@ -256,7 +256,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
   <button onClick={handleCheckIn} className="btn btn-primary w-40">Check In</button>
 
   {(userRole === 'admin' || userRole === 'manager') && (
-    <button onClick={handleCancellation} className="btn btn-danger w-40" disabled={!!cancellationRequest?.status === 'pending'}>
+    <button onClick={handleCancellation} className="btn btn-danger w-28" disabled={!!cancellationRequest?.status === 'pending'}>
       {userRole === 'admin' ? 'Cancel' : 'Cancel'}
     </button>
   )}
