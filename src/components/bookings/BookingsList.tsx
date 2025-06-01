@@ -12,6 +12,9 @@ const BookingsList: React.FC = () => {
   const { getRoomById } = useRoomStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [refreshKey, setRefreshKey] = useState(0);
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+
   
   const bookings = getAllBookings();
   const today = new Date();
