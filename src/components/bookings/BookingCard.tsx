@@ -247,6 +247,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
           Cancellation request pending
         </div>
       )}
+      
     </div>
   </div>
 </>
