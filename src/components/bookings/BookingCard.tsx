@@ -193,7 +193,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
 
     {/* LEFT SIDE: All Info */}
-    <div className="grid grid-cols-3 gap-1 items-center w-full mr-6">
+    <div className="grid grid-cols-3 gap-0 items-center w-full mr-6">
 
     <div className="flex flex-col gap-1">
       <h3 className="text-md font-semibold">{booking.guestName}</h3>
