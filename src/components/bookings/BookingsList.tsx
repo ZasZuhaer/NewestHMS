@@ -78,11 +78,10 @@ const sortedBookings = [...bookings].sort((a, b) => {
       booking.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.nationalId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    );
-
-    const roomMatch = !searchRoomNumber || (
       getRoomById(booking.roomId)?.roomNumber.includes(searchRoomNumber)
     );
+
+  
   
     let dateMatch = true;
   
@@ -107,7 +106,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
       dateMatch = bookingDate >= start && bookingDate <= end;
     }
   
-    return searchMatch && dateMatch && roomMatch;
+    return searchMatch && dateMatch;
   });
 
 
