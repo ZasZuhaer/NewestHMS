@@ -193,17 +193,17 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
 
     {/* LEFT SIDE: All Info */}
-    <div className="grid grid-cols-3 gap-0 items-center w-full">
+    <div className="grid grid-cols-3 gap-1 items-center w-full">
 
     <div className="flex flex-col gap-1">
       <h3 className="text-md font-semibold">{booking.guestName}</h3>
     
-      <div className="flex items-center gap-0 text-xs text-gray-600">
+      <div className="flex items-center gap-1 text-xs text-gray-600">
         <User className="w-5 h-5 text-gray-400" />
         <span>ID: {booking.nationalId}</span>
       </div>
 
-      <div className="flex items-center gap-0 text-xs text-gray-600">
+      <div className="flex items-center gap-1 text-xs text-gray-600">
   <Users className="w-5 h-5 text-gray-400" />
   <span>{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</span>
 </div>
@@ -211,7 +211,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
        
 
-    <div className="flex flex-col gap-0">
+    <div className="flex flex-col gap-1"> 
 
       <h3 className="text-md font-semibold">Room {roomNumber ?? booking.roomId}</h3>
       
