@@ -184,7 +184,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
   return (
     <>
       <div className={`card border ${isActive ? 'border-teal-300 bg-teal-50' : 'border-gray-200'} ${variant === 'list' ? 'flex items-center p-4' : 'p-4'}`}>
-        <div className={`p-4 ${variant === 'list' ? 'space-y-1' : ''}`}>
+        <div className={`p-4 ${variant === 'list' ? '' : ''}`}>
 
 {variant === 'list' ? (
 <>
