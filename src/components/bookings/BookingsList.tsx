@@ -10,7 +10,6 @@ import { Search } from 'lucide-react';
 const BookingsList: React.FC = () => {
   const { getAllBookings } = useBookingStore();
   const { getRoomById } = useRoomStore();
-  const [searchTerm, setSearchTerm] = useState('');
   const [refreshKey, setRefreshKey] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('');
