@@ -161,7 +161,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
   };
   
   const formatDateTime = (dateTimeString: string) => {
-    return format(parseISO(dateTimeString), 'dd/MM/yyyy HH:mm');
+    return format(parseISO(dateTimeString), 'dd/MM/yyyy hh:mm a');
   };
   
   const paymentStatus = booking.paidAmount >= booking.totalAmount 
