@@ -78,7 +78,6 @@ const sortedBookings = [...bookings].sort((a, b) => {
       booking.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.nationalId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getRoomById(booking.roomId)?.roomNumber.includes(searchRoomNumber)
     );
 
   
