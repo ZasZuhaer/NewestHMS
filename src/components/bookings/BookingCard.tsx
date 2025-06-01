@@ -229,7 +229,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
     </div>
 
     {/* RIGHT SIDE: Buttons stacked vertically */}
-    <div className="flex flex-col items-end gap-2">
+    <div className="flex flex-col items-end gap-1">
       {!booking.checkInDateTime && !booking.cancelledAt && (
         <>
           <button onClick={handleCheckIn} className="btn btn-primary w-32">Check In</button>
