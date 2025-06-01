@@ -192,7 +192,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
   {/* LEFT SIDE */}
   <div>
     <h3 className="text-lg font-semibold">{booking.guestName}</h3>
-    <p className="text-sm text-gray-500">{booking.nationalId}</p>
+    <p className="text-sm text-gray-500">ID: {booking.nationalId}</p>
     <p className="text-sm text-gray-500">{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</p>
   </div>
 
