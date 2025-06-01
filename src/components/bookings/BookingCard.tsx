@@ -267,7 +267,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
       {booking.checkInDateTime && !booking.checkOutDateTime && (
         <>
           <button onClick={() => setShowExtendModal(true)} className="btn btn-secondary w-40">Extend</button>
-          <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600 w-30">Check Out</button>
+          <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600 w-28">Check Out</button>
         </>
       )}
 
