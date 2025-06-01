@@ -211,7 +211,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
        
 
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-0">
 
       <h3 className="text-md font-semibold">Room {roomNumber ?? booking.roomId}</h3>
       
