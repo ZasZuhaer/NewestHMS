@@ -135,7 +135,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
       type="number"
       value={searchRoomNumber}
       onChange={(e) => setSearchRoomNumber(e.target.value)}
-      className="px-2 py-2 border rounded-md text-sm"
+      className="w-24 px-2 py-2 border rounded-md text-sm"
     />
   </div>
         
