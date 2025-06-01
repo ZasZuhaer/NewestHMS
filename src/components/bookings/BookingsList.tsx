@@ -113,7 +113,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
   showRoom={true}
   onUpdate={handleBookingUpdated}
   roomNumber={room?.roomNumber}   // ✅ this is new prop
-  variant="list"  // ✅ here
+  variant={isSmallScreen ? "default" : "list"}  // ✅ here
 />
 
 
