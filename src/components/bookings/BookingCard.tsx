@@ -232,6 +232,14 @@ const BookingCard: React.FC<BookingCardProps> = ({
               <span>Checked in: {formatDateTime(booking.checkInDateTime)}</span>
             </div>
           )}
+
+          {booking.checkOutDateTime && (
+            <div className="flex items-center text-xs text-gray-600 mt-1">
+              <Clock className="h-3 w-3 mr-1" />
+              <span>Checked out: {formatDateTime(booking.checkOutDateTime)}</span>
+            </div>
+          )}
+            
           
           </div>
     
