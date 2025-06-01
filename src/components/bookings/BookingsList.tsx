@@ -81,13 +81,32 @@ const sortedBookings = [...bookings].sort((a, b) => {
       getRoomById(booking.roomId)?.roomNumber.includes(appliedSearchTerm)
     );
   
-    // Booking date filter
-    const bookingDate = parseISO(booking.bookingDate);
-    const startDateMatch = !appliedStartDate || bookingDate >= parseISO(appliedStartDate);
-    const endDateMatch = !appliedEndDate || bookingDate <= parseISO(appliedEndDate);
+    let dateMatch = true;
   
-    return searchMatch && startDateMatch && endDateMatch;
+    // Parse dates once
+    const bookingDate = parseISO(booking.bookingDate);
+    const checkOutDate = booking.checkOutDateTime ? parseISO(booking.checkOutDateTime) : null;
+  
+    if (appliedStartDate && !appliedEndDate) {
+      // Only start date provided → bookingDate must equal startDate
+      dateMatch = format(bookingDate, 'yyyy-MM-dd') === appliedStartDate;
+    } else if (!appliedStartDate && appliedEndDate) {
+      // Only end date provided → checkOutDate must equal endDate
+      if (checkOutDate) {
+        dateMatch = format(checkOutDate, 'yyyy-MM-dd') === appliedEndDate;
+      } else {
+        dateMatch = false; // No checkout date means it won't match
+      }
+    } else if (appliedStartDate && appliedEndDate) {
+      // Both provided → bookingDate must be within the range
+      const start = parseISO(appliedStartDate);
+      const end = parseISO(appliedEndDate);
+      dateMatch = bookingDate >= start && bookingDate <= end;
+    }
+  
+    return searchMatch && dateMatch;
   });
+
 
   
   const handleBookingUpdated = () => {
