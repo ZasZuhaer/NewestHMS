@@ -139,7 +139,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
     />
   </div>
 
-  <div className="flex flex-col">
+  <div className="flex items-center">
   <label className="text-sm font-medium mb-1">
     {startDate ? "To" : "Checkout Date"}
   </label>
