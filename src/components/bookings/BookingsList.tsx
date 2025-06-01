@@ -180,6 +180,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
     setEndDate('');
     setAppliedStartDate('');
     setAppliedEndDate('');
+      setSearchRoomNumber('');
     }}
     className="px-4 py-2 bg-gray-300 text-gray-800 text-sm rounded-md hover:bg-gray-400"
   >
