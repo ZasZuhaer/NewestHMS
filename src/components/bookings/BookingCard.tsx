@@ -220,11 +220,6 @@ const BookingCard: React.FC<BookingCardProps> = ({
         <span>৳{booking.paidAmount} paid</span>
       </div>
 
-      {cancellationRequest?.status === 'pending' && (
-        <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md text-xs">
-          Cancellation request pending
-        </div>
-      )}
     </div>
 
     {/* RIGHT SIDE: Buttons stacked vertically */}
@@ -245,6 +240,12 @@ const BookingCard: React.FC<BookingCardProps> = ({
           <button onClick={() => setShowExtendModal(true)} className="btn btn-secondary w-32">Extend</button>
           <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600 w-32">Check Out</button>
         </>
+      )}
+
+      {cancellationRequest?.status === 'pending' && (
+        <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md text-xs">
+          Cancellation request pending
+        </div>
       )}
     </div>
   </div>
