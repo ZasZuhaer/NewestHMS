@@ -230,6 +230,17 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
     </div>
 
+
+
+    <div className="flex flex-col gap-1 ml-auto">
+      {cancellationRequest?.status === 'pending' && (
+        <div className="flex items-center justify-center bg-amber-100 text-amber-800 px-1 py-1 rounded-md text-xs">
+          Cancellation request pending
+        </div>
+      )}
+    </div>
+
+    
     {/* RIGHT SIDE: Buttons stacked vertically */}
     <div className="flex flex-col gap-1 ml-auto">
       {!booking.checkInDateTime && !booking.cancelledAt && (
@@ -248,12 +259,6 @@ const BookingCard: React.FC<BookingCardProps> = ({
           <button onClick={() => setShowExtendModal(true)} className="btn btn-secondary w-32">Extend</button>
           <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600 w-32">Check Out</button>
         </>
-      )}
-
-      {cancellationRequest?.status === 'pending' && (
-        <div className="flex items-center justify-center bg-amber-100 text-amber-800 px-1 py-1 rounded-md text-xs">
-          Cancellation request pending
-        </div>
       )}
       
     </div>
