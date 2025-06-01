@@ -73,23 +73,22 @@ const sortedBookings = [...bookings].sort((a, b) => {
 
   
   const filteredBookings = sortedBookings.filter(booking => {
-    const bookingDate = parseISO(booking.bookingDate);
-    const withinDateRange =
-      (!startDate || bookingDate >= parseISO(startDate)) &&
-      (!endDate || bookingDate <= parseISO(endDate));
-  
-    if (!withinDateRange) return false;
-  
-    if (!searchTerm) return true;
-  
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      booking.guestName.toLowerCase().includes(searchLower) ||
-      booking.nationalId.toLowerCase().includes(searchLower) ||
-      booking.phone.toLowerCase().includes(searchLower) ||
-      getRoomById(booking.roomId)?.roomNumber.includes(searchTerm)
+    // Text search
+    const searchMatch = !appliedSearchTerm || (
+      booking.guestName.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
+      booking.nationalId.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
+      booking.phone.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
+      getRoomById(booking.roomId)?.roomNumber.includes(appliedSearchTerm)
     );
+  
+    // Booking date filter
+    const bookingDate = parseISO(booking.bookingDate);
+    const startDateMatch = !appliedStartDate || bookingDate >= parseISO(appliedStartDate);
+    const endDateMatch = !appliedEndDate || bookingDate <= parseISO(appliedEndDate);
+  
+    return searchMatch && startDateMatch && endDateMatch;
   });
+
   
   const handleBookingUpdated = () => {
     setRefreshKey(prev => prev + 1);
