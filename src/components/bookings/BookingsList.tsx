@@ -92,7 +92,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
       </div>
       
       {filteredBookings.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+        <div className="text-center py-12 bg-white rounded-lg shadow-;g">
           <p className="text-gray-500">No bookings found</p>
         </div>
       ) : (
