@@ -223,7 +223,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 </div>
 
     
-      <div className="flex items-center gap-1 text-sm text-gray-500"> 
+      <div className="flex items-center gap-1 text-sm font-semibold"> 
         <CreditCard className="w-4 h-4 text-gray-400" />
         <span>৳{booking.paidAmount} / ৳{booking.totalAmount}</span>
       </div> 
