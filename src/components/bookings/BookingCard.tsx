@@ -185,6 +185,53 @@ const BookingCard: React.FC<BookingCardProps> = ({
     <>
       <div className={`card border ${isActive ? 'border-teal-300 bg-teal-50' : 'border-gray-200'} ${variant === 'list' ? 'flex items-center p-4' : 'p-4'}`}>
         <div className={`p-4 ${variant === 'list' ? 'flex justify-between items-center' : ''}`}>
+{variant === 'list' ? (
+    <>
+      {/* Wide list layout */}
+      <div>
+        <h3 className="text-lg font-semibold">{booking.guestName}</h3>
+        {showRoom && (
+          <p className="text-sm text-gray-600">
+            Room {roomNumber ?? booking.roomId}
+          </p>
+        )}
+        <p className="text-sm text-gray-600 mt-1">{formatDate(booking.bookingDate)} ({booking.durationDays} days)</p>
+        <p className="text-sm text-gray-600 mt-1">ID: {booking.nationalId}</p>
+        <p className="text-sm text-gray-600 mt-1">Guests: {booking.numberOfPeople}</p>
+        <p className="text-sm text-gray-600 mt-1">৳{booking.paidAmount} / ৳{booking.totalAmount}</p>
+      </div>
+
+      <div className="flex flex-col items-end gap-2">
+        <span className={`px-2 py-1 text-xs font-medium rounded-full ${paymentStatusClass}`}>
+          {paymentStatus}
+        </span>
+
+        <div className="flex gap-2">
+          {!booking.checkInDateTime && !booking.cancelledAt && (
+            <>
+              <button onClick={handleCheckIn} className="btn btn-primary">Check In</button>
+              {(userRole === 'admin' || userRole === 'manager') && (
+                <button onClick={handleCancellation} className="btn btn-danger" disabled={!!cancellationRequest?.status === 'pending'}>
+                  {userRole === 'admin' ? 'Cancel Booking' : 'Request Cancellation'}
+                </button>
+              )}
+            </>
+          )}
+
+          {booking.checkInDateTime && !booking.checkOutDateTime && (
+            <>
+              <button onClick={() => setShowExtendModal(true)} className="btn btn-secondary">Extend</button>
+              <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600">Check Out</button>
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  ) : (
+    <>
+      {/* Your existing layout — keep as is */}
+
+          
           <div className="flex justify-between items-start mb-3">
             <div>
               <h3 className="text-lg font-semibold">{booking.guestName}</h3>
@@ -282,6 +329,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
               <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-md text-sm">
                 Cancellation request pending
               </div>
+      </>
             )}
           </div>
         </div>
