@@ -230,7 +230,6 @@ const BookingCard: React.FC<BookingCardProps> = ({
     
 
 
-    </div>
 
     
     {/* RIGHT SIDE: Buttons stacked vertically */}
