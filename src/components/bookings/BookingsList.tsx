@@ -69,8 +69,15 @@ const sortedBookings = [...bookings].sort((a, b) => {
 
   
   const filteredBookings = sortedBookings.filter(booking => {
+    const bookingDate = parseISO(booking.bookingDate);
+    const withinDateRange =
+      (!startDate || bookingDate >= parseISO(startDate)) &&
+      (!endDate || bookingDate <= parseISO(endDate));
+  
+    if (!withinDateRange) return false;
+  
     if (!searchTerm) return true;
-    
+  
     const searchLower = searchTerm.toLowerCase();
     return (
       booking.guestName.toLowerCase().includes(searchLower) ||
