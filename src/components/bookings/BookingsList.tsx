@@ -96,7 +96,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
           <p className="text-gray-500">No bookings found</p>
         </div>
       ) : (
-<div className="flex flex-col gap-2">
+<div className="flex flex-col gap-1">
           {filteredBookings.map(booking => {
             const room = getRoomById(booking.roomId);
             const isActive = booking.checkInDateTime && !booking.checkOutDateTime;
