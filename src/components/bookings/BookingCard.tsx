@@ -200,7 +200,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
   <div className="text-right">
     <p className="text-lg font-medium">{formatDate(booking.bookingDate)} ({booking.durationDays} days)</p>
     <p className="text-sm text-gray-500">৳{booking.totalAmount} total</p>
-    <p className="text-xs text-gray-500">৳{booking.paidAmount} paid</p>
+    <p className="text-sm text-gray-500">৳{booking.paidAmount} paid</p>
 
     {cancellationRequest?.status === 'pending' && (
       <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md text-xs mt-2 inline-block">
