@@ -212,7 +212,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
     <div className="flex flex-col gap-1">
 
-      <h3 className="text-lg font-semibold">{booking.roomId}</h3>
+      <h3 className="text-lg font-semibold">{roomNumber ?? booking.roomId}</h3>
       
       <div className="flex items-center gap-1 text-md text-gray-500">
         <Calendar className="w-4 h-4 text-gray-400" /> 
