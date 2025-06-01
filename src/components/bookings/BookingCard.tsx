@@ -364,7 +364,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
             )}
             
             {cancellationRequest?.status === 'pending' && (
-  <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-md text-sm">
+  <div className="flex item-center justify-center bg-amber-100 text-amber-800 px-4 py-2 rounded-md text-sm">
     Cancellation request pending
   </div>
 )}
