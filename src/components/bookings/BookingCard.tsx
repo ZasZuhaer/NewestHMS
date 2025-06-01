@@ -219,15 +219,9 @@ const BookingCard: React.FC<BookingCardProps> = ({
         <span>{formatDate(booking.bookingDate)} ({booking.durationDays} days)</span>
       </div>
       
-    </div>
-
-    <div className="flex flex-col gap-1">
-
-      
+    </div> 
 
     
-      
-    </div>
 
 
     </div>
