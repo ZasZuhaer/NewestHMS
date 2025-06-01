@@ -253,7 +253,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
     <div className="flex flex-col gap-1 ml-auto">
       {!booking.checkInDateTime && !booking.cancelledAt && (
         <div className="flex flex-col items-center gap-1">
-  <button onClick={handleCheckIn} className="btn btn-primary w-40">Check In</button>
+  <button onClick={handleCheckIn} className="btn btn-primary w-38">Check In</button>
 
   {(userRole === 'admin' || userRole === 'manager') && (
     <button onClick={handleCancellation} className="btn btn-danger w-48" disabled={!!cancellationRequest?.status === 'pending'}>
