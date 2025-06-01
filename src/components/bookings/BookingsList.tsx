@@ -74,11 +74,11 @@ const sortedBookings = [...bookings].sort((a, b) => {
   
   const filteredBookings = sortedBookings.filter(booking => {
     // Text search
-    const searchMatch = !appliedSearchTerm || (
-      booking.guestName.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
-      booking.nationalId.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
-      booking.phone.toLowerCase().includes(appliedSearchTerm.toLowerCase()) ||
-      getRoomById(booking.roomId)?.roomNumber.includes(appliedSearchTerm)
+    const searchMatch = !searchTerm || (
+      booking.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.nationalId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      getRoomById(booking.roomId)?.roomNumber.includes(searchTerm)
     );
   
     let dateMatch = true;
