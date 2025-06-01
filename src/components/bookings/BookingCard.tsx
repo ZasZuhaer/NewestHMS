@@ -192,7 +192,6 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
 
 
-
     {/* LEFT SIDE: All Info */}
     <div className="flex items-center gap-8 flex-wrap">
     <div className="flex flex-col gap-1">
