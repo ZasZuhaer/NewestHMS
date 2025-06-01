@@ -109,7 +109,6 @@ const sortedBookings = [...bookings].sort((a, b) => {
     }
   
     return searchMatch && roomMatch && dateMatch;
-
   });
 
 
