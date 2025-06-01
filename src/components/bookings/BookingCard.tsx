@@ -192,19 +192,20 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
     {/* LEFT SIDE: All Info */}
     <div className="flex items-center gap-8 flex-wrap">
-      <div>
-        <h3 className="text-lg font-semibold">{booking.guestName}</h3>
-      </div>
-
+    <div className="flex flex-col gap-1">
+      <h3 className="text-lg font-semibold">{booking.guestName}</h3>
+    
       <div className="flex items-center gap-1 text-sm text-gray-500">
         <User className="w-4 h-4 text-gray-400" />
         <span>ID: {booking.nationalId}</span>
       </div>
-
+    
       <div className="flex items-center gap-1 text-sm text-gray-500">
         <Users className="w-4 h-4 text-gray-400" />
         <span>{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</span>
       </div>
+    </div>
+
 
       <div className="flex items-center gap-1 text-sm text-gray-500">
         <Calendar className="w-4 h-4 text-gray-400" />
