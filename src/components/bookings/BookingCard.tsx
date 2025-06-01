@@ -215,7 +215,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
       <h3 className="text-md font-semibold">Room {roomNumber ?? booking.roomId}</h3>
       
-      <div className="flex items-center gap-1 text-xs text-gray-600">
+      <div className="flex items-center gap-0 text-xs text-gray-600">
         <Calendar className="w-5 h-5 text-gray-400" /> 
         <span>{formatDate(booking.bookingDate)} ({booking.durationDays} days)</span>
       </div>
