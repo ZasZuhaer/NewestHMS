@@ -207,7 +207,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
   )}
 
   {cancellationRequest?.status === 'pending' && (
-    <div className="justify-between bg-amber-100 text-amber-800 px-3 py-1 rounded-md text-xs mt-2 inline-block">
+    <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md text-xs mt-2 inline-block">
       Cancellation request pending
     </div>
   )}
@@ -331,7 +331,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
             )}
             
             {cancellationRequest?.status === 'pending' && (
-  <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-md text-sm">
+  <div className="justify-between bg-amber-100 text-amber-800 px-4 py-2 rounded-md text-sm">
     Cancellation request pending
   </div>
 )}
