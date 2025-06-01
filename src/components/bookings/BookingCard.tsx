@@ -188,17 +188,16 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
 {variant === 'list' ? (
 <>
-  <div className="flex justify-between items-center gap-2">
-    {/* All info side by side */}
-    <div className="flex items-center gap-4">
-
+  <div className="flex justify-between items-start gap-6">
+    {/* LEFT SIDE: All Info */}
+    <div className="flex items-center gap-8 flex-wrap">
       <div>
         <h3 className="text-lg font-semibold">{booking.guestName}</h3>
       </div>
 
       <div className="flex items-center gap-1 text-sm text-gray-500">
         <User className="w-4 h-4 text-gray-400" />
-        <span>{booking.nationalId}</span>
+        <span>ID: {booking.nationalId}</span>
       </div>
 
       <div className="flex items-center gap-1 text-sm text-gray-500">
@@ -228,13 +227,13 @@ const BookingCard: React.FC<BookingCardProps> = ({
       )}
     </div>
 
-    {/* Actions */}
-    <div className="flex items-center gap-2">
+    {/* RIGHT SIDE: Buttons stacked vertically */}
+    <div className="flex flex-col items-end gap-2">
       {!booking.checkInDateTime && !booking.cancelledAt && (
         <>
-          <button onClick={handleCheckIn} className="btn btn-primary">Check In</button>
+          <button onClick={handleCheckIn} className="btn btn-primary w-32">Check In</button>
           {(userRole === 'admin' || userRole === 'manager') && (
-            <button onClick={handleCancellation} className="btn btn-danger" disabled={!!cancellationRequest?.status === 'pending'}>
+            <button onClick={handleCancellation} className="btn btn-danger w-32" disabled={!!cancellationRequest?.status === 'pending'}>
               {userRole === 'admin' ? 'Cancel' : 'Request Cancel'}
             </button>
           )}
@@ -243,13 +242,14 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
       {booking.checkInDateTime && !booking.checkOutDateTime && (
         <>
-          <button onClick={() => setShowExtendModal(true)} className="btn btn-secondary">Extend</button>
-          <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600">Check Out</button>
+          <button onClick={() => setShowExtendModal(true)} className="btn btn-secondary w-32">Extend</button>
+          <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600 w-32">Check Out</button>
         </>
       )}
     </div>
   </div>
 </>
+
 
 
   ) : (
