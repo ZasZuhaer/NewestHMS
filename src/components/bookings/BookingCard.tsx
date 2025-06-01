@@ -188,46 +188,50 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
 {variant === 'list' ? (
     <>
-      {/* Wide list layout */}
-      <div>
-        <h3 className="text-lg font-semibold">{booking.guestName}</h3>
-        {showRoom && (
-          <p className="text-sm text-gray-600">
-            Room {roomNumber ?? booking.roomId}
-          </p>
+  <div className="flex justify-between items-start">
+    <div>
+      <h3 className="text-lg font-semibold">{booking.guestName}</h3>
+      <p className="text-sm text-gray-500">{booking.nationalId}</p>
+      <p className="text-sm text-gray-500">{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</p>
+    </div>
+
+    <div className="text-right">
+      <p className="text-sm font-medium">{formatDate(booking.bookingDate)} ({booking.durationDays} days)</p>
+      <p className="text-xs text-gray-500">৳{booking.totalAmount} total</p>
+      <p className="text-xs text-gray-500">৳{booking.paidAmount} paid</p>
+    </div>
+  </div>
+
+  {showRoom && (
+    <p className="text-sm text-gray-600 mt-1">Room {roomNumber ?? booking.roomId}</p>
+  )}
+
+  {cancellationRequest?.status === 'pending' && (
+    <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md text-xs mt-2 inline-block">
+      Cancellation request pending
+    </div>
+  )}
+
+  <div className="flex justify-end gap-2 mt-3">
+    {!booking.checkInDateTime && !booking.cancelledAt && (
+      <>
+        <button onClick={handleCheckIn} className="btn btn-primary">Check In</button>
+        {(userRole === 'admin' || userRole === 'manager') && (
+          <button onClick={handleCancellation} className="btn btn-danger" disabled={!!cancellationRequest?.status === 'pending'}>
+            {userRole === 'admin' ? 'Cancel Booking' : 'Request Cancellation'}
+          </button>
         )}
-        <p className="text-sm text-gray-600 mt-1">{formatDate(booking.bookingDate)} ({booking.durationDays} days)</p>
-        <p className="text-sm text-gray-600 mt-1">ID: {booking.nationalId}</p>
-        <p className="text-sm text-gray-600 mt-1">Guests: {booking.numberOfPeople}</p>
-        <p className="text-sm text-gray-600 mt-1">৳{booking.paidAmount} / ৳{booking.totalAmount}</p>
-      </div>
+      </>
+    )}
 
-      <div className="flex flex-col items-end gap-2">
-        <span className={`px-2 py-1 text-xs font-medium rounded-full ${paymentStatusClass}`}>
-          {paymentStatus}
-        </span>
-
-        <div className="flex gap-2">
-          {!booking.checkInDateTime && !booking.cancelledAt && (
-            <>
-              <button onClick={handleCheckIn} className="btn btn-primary">Check In</button>
-              {(userRole === 'admin' || userRole === 'manager') && (
-                <button onClick={handleCancellation} className="btn btn-danger" disabled={!!cancellationRequest?.status === 'pending'}>
-                  {userRole === 'admin' ? 'Cancel Booking' : 'Request Cancellation'}
-                </button>
-              )}
-            </>
-          )}
-
-          {booking.checkInDateTime && !booking.checkOutDateTime && (
-            <>
-              <button onClick={() => setShowExtendModal(true)} className="btn btn-secondary">Extend</button>
-              <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600">Check Out</button>
-            </>
-          )}
-        </div>
-      </div>
-    </>
+    {booking.checkInDateTime && !booking.checkOutDateTime && (
+      <>
+        <button onClick={() => setShowExtendModal(true)} className="btn btn-secondary">Extend</button>
+        <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600">Check Out</button>
+      </>
+    )}
+  </div>
+</>
   ) : (
     <>
       {/* Your existing layout — keep as is */}
