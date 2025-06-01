@@ -108,7 +108,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
       dateMatch = bookingDate >= start && bookingDate <= end;
     }
   
-    return searchMatch && roomMatch && dateMatch;
+    return searchMatch && roomMatch && dateMatch; 
   });
 
 
