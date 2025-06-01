@@ -14,6 +14,10 @@ const BookingsList: React.FC = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState('');
+  const [appliedStartDate, setAppliedStartDate] = useState('');
+  const [appliedEndDate, setAppliedEndDate] = useState('');
+
 
   
   const bookings = getAllBookings();
