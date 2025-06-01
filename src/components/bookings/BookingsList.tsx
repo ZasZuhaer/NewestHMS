@@ -16,6 +16,7 @@ const BookingsList: React.FC = () => {
   const [endDate, setEndDate] = useState('');
   const [appliedStartDate, setAppliedStartDate] = useState('');
   const [appliedEndDate, setAppliedEndDate] = useState('');
+  const [searchRoomNumber, setSearchRoomNumber] = useState('');
 
 
   
@@ -77,7 +78,7 @@ const sortedBookings = [...bookings].sort((a, b) => {
       booking.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.nationalId.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getRoomById(booking.roomId)?.roomNumber.includes(searchTerm)
+      getRoomById(booking.roomId)?.roomNumber.includes(searchRoomNumber)
     );
   
     let dateMatch = true;
@@ -128,6 +129,16 @@ const sortedBookings = [...bookings].sort((a, b) => {
     />
   </div>
 
+  <div className="flex items-center">
+    <label className="text-sm font-medium mr-2">Room:</label>
+    <input
+      type="number"
+      value={searchRoomNumber}
+      onChange={(e) => setSearchRoomNumber(e.target.value)}
+      className="px-2 py-2 border rounded-md text-sm"
+    />
+  </div>
+        
   <div className="flex items-center">
     <label className="text-sm font-medium mr-2">Booking Date:</label>
     <input
