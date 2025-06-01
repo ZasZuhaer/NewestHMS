@@ -214,7 +214,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
         <span>{formatDate(booking.bookingDate)} ({booking.durationDays} days)</span>
       </div>
     
-      <div className="flex items-center gap-1 text-sm text-gray-500">
+      <div className="flex items-center gap-1 text-md text-gray-500">
         <CreditCard className="w-4 h-4 text-gray-400" />
         <span>৳{booking.totalAmount} total</span>
       </div>
