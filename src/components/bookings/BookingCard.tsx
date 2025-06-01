@@ -188,33 +188,49 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
 {variant === 'list' ? (
     <>
-  <div className="flex justify-between items-start gap-4">
-  {/* LEFT SIDE */}
-  <div>
-    <h3 className="text-lg font-semibold">{booking.guestName}</h3>
-    <p className="text-sm text-gray-500">ID: {booking.nationalId}</p>
-    <p className="text-sm text-gray-500">{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</p>
-  </div>
+  <div className="flex justify-between items-center gap-6">
+    {/* All info side by side */}
+    <div className="flex items-center gap-8">
 
-  {/* RIGHT SIDE */}
-  <div className="text-right">
-    <p className="text-lg font-semibold">{formatDate(booking.bookingDate)} ({booking.durationDays} days)</p>
-    <p className="text-sm text-gray-500">৳{booking.totalAmount} total</p>
-    <p className="text-sm text-gray-500">৳{booking.paidAmount} paid</p>
-
-    {cancellationRequest?.status === 'pending' && (
-      <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md text-xs mt-2 inline-block">
-        Cancellation request pending
+      <div>
+        <h3 className="text-lg font-semibold">{booking.guestName}</h3>
       </div>
-    )}
 
-    <div className="flex justify-end gap-2 mt-3">
+      <div>
+        <p className="text-sm text-gray-500">ID: {booking.nationalId}</p>
+      </div>
+
+      <div>
+        <p className="text-sm text-gray-500">{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</p>
+      </div>
+
+      <div>
+        <p className="text-sm font-semibold">{formatDate(booking.bookingDate)} ({booking.durationDays} days)</p>
+      </div>
+
+      <div>
+        <p className="text-sm text-gray-500">৳{booking.totalAmount} total</p>
+      </div>
+
+      <div>
+        <p className="text-sm text-gray-500">৳{booking.paidAmount} paid</p>
+      </div>
+
+      {cancellationRequest?.status === 'pending' && (
+        <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md text-xs">
+          Cancellation request pending
+        </div>
+      )}
+    </div>
+
+    {/* Actions */}
+    <div className="flex items-center gap-2">
       {!booking.checkInDateTime && !booking.cancelledAt && (
         <>
           <button onClick={handleCheckIn} className="btn btn-primary">Check In</button>
           {(userRole === 'admin' || userRole === 'manager') && (
             <button onClick={handleCancellation} className="btn btn-danger" disabled={!!cancellationRequest?.status === 'pending'}>
-              {userRole === 'admin' ? 'Cancel Booking' : 'Request Cancellation'}
+              {userRole === 'admin' ? 'Cancel' : 'Request Cancel'}
             </button>
           )}
         </>
@@ -228,9 +244,8 @@ const BookingCard: React.FC<BookingCardProps> = ({
       )}
     </div>
   </div>
-</div>
-
 </>
+
   ) : (
     <>
       {/* Your existing layout — keep as is */}
