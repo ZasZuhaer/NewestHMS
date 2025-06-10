@@ -15,8 +15,8 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      <main className="flex-1 p-6">
-        <div className="container mx-auto">
+      <main className="flex-1 p-4 sm:p-6">
+        <div className="w-full max-w-full">
           {children}
         </div>
       </main>
