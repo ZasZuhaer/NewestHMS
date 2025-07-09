@@ -90,6 +90,7 @@ const BookingsList: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 bg-white rounded-lg shadow-lg p-4">
         <div className="flex items-center bg-white rounded-lg px-2 py-1 border">
+          <label className="text-sm font-medium mb-1 block">Search</label>
           <Search className="h-5 w-5 text-gray-400 mr-1" />
           <input
             type="text"
