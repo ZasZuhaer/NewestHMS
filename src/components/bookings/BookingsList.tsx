@@ -97,7 +97,7 @@ const BookingsList: React.FC = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by guest name, ID, phone or room number..."
-            className="flex-1 border-0 focus:ring-0 focus:outline-none text-sm"
+            className="w-full px-2 py-2 border rounded-md text-sm"
           />
         </div>
 
