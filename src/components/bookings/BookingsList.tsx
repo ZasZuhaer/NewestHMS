@@ -89,16 +89,19 @@ const BookingsList: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 bg-white rounded-lg shadow-lg p-4">
-        <div className="flex items-center bg-white rounded-lg px-2 py-1 border">
-          <Search className="h-5 w-5 text-gray-400 mr-1" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by guest name, ID, phone or room number..."
-            className="flex-1 border-0 focus:ring-0 focus:outline-none text-sm"
-          />
-        </div>
+        <div>
+      <label className="text-sm font-medium mb-1 block">Search</label>
+      <div className="flex items-center w-full px-2 py-[7px] border rounded-md bg-white">
+        <Search className="h-5 w-5 text-gray-400 mr-1" />
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="By guest name, ID, phone, or room number"
+          className="flex-1 border-0 focus:ring-0 focus:outline-none text-sm bg-transparent"
+        />
+      </div>
+    </div>
 
         <div>
           <label className="text-sm font-medium mb-1 block">Room</label>
