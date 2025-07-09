@@ -3,7 +3,8 @@ import RoomsList from '../components/rooms/RoomsList';
 import RoomDetails from '../components/rooms/RoomDetails';
 import RoomFilters from '../components/rooms/RoomFilters';
 import RoomForm from '../components/rooms/RoomForm';
-import { Plus } from 'lucide-react';
+import MultipleBookingPage from './MultipleBookingPage';
+import { Plus, Calendar } from 'lucide-react';
 import { RoomFilter } from '../types';
 import { useAuthStore } from '../store/useAuthStore';
 import toast from 'react-hot-toast';
@@ -11,6 +12,7 @@ import toast from 'react-hot-toast';
 const RoomsPage: React.FC = () => {
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [isAddingRoom, setIsAddingRoom] = useState(false);
+  const [isCreatingMultipleBooking, setIsCreatingMultipleBooking] = useState(false);
   const [filter, setFilter] = useState<RoomFilter>({});
   const { getCurrentUserRole } = useAuthStore();
   
@@ -31,6 +33,19 @@ const RoomsPage: React.FC = () => {
     toast.success('Room added successfully');
   };
   
+  const handleCreateMultipleBooking = () => {
+    setIsCreatingMultipleBooking(true);
+  };
+  
+  const handleMultipleBookingCreated = () => {
+    setIsCreatingMultipleBooking(false);
+    toast.success('Multiple bookings created successfully');
+  };
+  
+  const handleCancelMultipleBooking = () => {
+    setIsCreatingMultipleBooking(false);
+  };
+  
   const isAdmin = getCurrentUserRole() === 'admin';
   
   if (isAddingRoom) {
@@ -44,6 +59,15 @@ const RoomsPage: React.FC = () => {
           />
         </div>
       </div>
+    );
+  }
+  
+  if (isCreatingMultipleBooking) {
+    return (
+      <MultipleBookingPage
+        onSubmit={handleMultipleBookingCreated}
+        onCancel={handleCancelMultipleBooking}
+      />
     );
   }
   
@@ -63,15 +87,25 @@ const RoomsPage: React.FC = () => {
       
       <RoomsList onSelectRoom={handleSelectRoom} filter={filter} />
 
-      {isAdmin && (
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col space-y-3">
         <button
-          onClick={handleAddRoom}
-          className="fixed bottom-6 right-6 z-50 inline-flex items-center px-4 py-2 rounded-full shadow-2xl text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+          onClick={handleCreateMultipleBooking}
+          className="inline-flex items-center px-4 py-2 rounded-full shadow-2xl text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          <Plus className="h-5 w-5 mr-2" />
-          Add Room
+          <Calendar className="h-5 w-5 mr-2" />
+          Create New Booking
         </button>
-      )}
+        
+        {isAdmin && (
+          <button
+            onClick={handleAddRoom}
+            className="inline-flex items-center px-4 py-2 rounded-full shadow-2xl text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            Add Room
+          </button>
+        )}
+      </div>
  
     </div>
   );
