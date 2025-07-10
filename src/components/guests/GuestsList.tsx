@@ -5,7 +5,11 @@ import { useRoomStore } from '../../store/useRoomStore';
 import { User, Phone, CreditCard, Calendar, Search } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 
-const GuestsList: React.FC = () => {
+interface GuestsListProps {
+  onSelectGuest: (guestId: string) => void;
+}
+
+const GuestsList: React.FC<GuestsListProps> = ({ onSelectGuest }) => {
   const { getAllGuests } = useGuestStore();
   const { getBookingsForGuest } = useBookingStore();
   const { getRoomById } = useRoomStore();
@@ -113,7 +117,11 @@ const sortedGuests = [...filteredGuests].sort((a, b) => {
             const cancelledBookings = bookings.filter(b => b.cancelledAt).length;
 
             return (
-              <div key={guest.id} className="card">
+              <div 
+                key={guest.id} 
+                className="card card-hover cursor-pointer"
+                onClick={() => onSelectGuest(guest.id)}
+              >
                 <div className="p-4">
                   <h3 className="text-lg font-semibold mb-3">{guest.name}</h3>
                   
