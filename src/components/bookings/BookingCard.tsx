@@ -189,7 +189,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
       ? 'bg-green-200 border-green-300'
       : booking.checkInDateTime
       ? 'bg-red-200 border-red-300'
-      : 'bg-yellow-300 border-yellow-300'
+      : 'bg-yellow-200 border-yellow-300'
   } ${variant === 'list' ? 'p-2' : 'p-3'}`}
 >
 
