@@ -166,7 +166,7 @@ const BookingsList: React.FC = () => {
           <p className="text-gray-500">No bookings found</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-1">
+        <div className="grid grid-cols-1 gap-1">
           {filteredBookings.map(booking => {
             const room = getRoomById(booking.roomId);
             const isActive = booking.checkInDateTime && !booking.checkOutDateTime;
