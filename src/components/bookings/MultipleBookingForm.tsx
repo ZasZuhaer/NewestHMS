@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Plus, X } from 'lucide-react';
+import { Guest } from '../../types';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useGuestStore } from '../../store/useGuestStore';
 import { useRoomStore } from '../../store/useRoomStore';
@@ -15,18 +16,19 @@ interface SelectedRoom {
 interface MultipleBookingFormProps {
   onSubmit: () => void;
   onCancel: () => void;
+  prefilledGuest?: Guest;
 }
 
-const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onCancel }) => {
+const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onCancel, prefilledGuest }) => {
   const { findOrCreateGuest, getAllGuests } = useGuestStore();
   const { getAllRooms } = useRoomStore();
   const { addBooking, isRoomAvailable } = useBookingStore();
   
   const today = format(new Date(), 'yyyy-MM-dd');
   
-  const [guestName, setGuestName] = useState('');
-  const [nationalId, setNationalId] = useState('');
-  const [phone, setPhone] = useState('');
+  const [guestName, setGuestName] = useState(prefilledGuest?.name || '');
+  const [nationalId, setNationalId] = useState(prefilledGuest?.nationalId || '');
+  const [phone, setPhone] = useState(prefilledGuest?.phone || '');
   const [selectedRooms, setSelectedRooms] = useState<SelectedRoom[]>([]);
   const [totalAmount, setTotalAmount] = useState('');
   const [paidAmount, setPaidAmount] = useState('');
@@ -42,6 +44,8 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
   
   // Auto-fill guest information when National ID matches
   useEffect(() => {
+    if (prefilledGuest) return; // Don't auto-fill if guest is already prefilled
+    
     if (nationalId.length > 0) {
       const existingGuest = getAllGuests().find(guest => guest.nationalId === nationalId);
       if (existingGuest) {
@@ -49,7 +53,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
         setPhone(existingGuest.phone);
       }
     }
-  }, [nationalId, getAllGuests]);
+  }, [nationalId, getAllGuests, prefilledGuest]);
   
   // Calculate end date based on booking date and duration
   const endDate = durationDays && bookingDate 
@@ -201,7 +205,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
         >
           <ArrowLeft className="h-5 w-5 text-gray-600" />
         </button>
-        <h2 className="text-xl font-bold">Create Bookings</h2>
+        <h2 className="text-xl font-bold">{prefilledGuest ? `Create Bookings for ${prefilledGuest.name}` : 'Create Bookings'}</h2>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -219,6 +223,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                 value={nationalId}
                 onChange={(e) => setNationalId(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                disabled={!!prefilledGuest}
                 required
               />
             </div>
@@ -233,6 +238,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                disabled={!!prefilledGuest}
                 required
               />
             </div>
@@ -247,6 +253,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                disabled={!!prefilledGuest}
                 required
               />
             </div>
