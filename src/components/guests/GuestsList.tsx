@@ -107,7 +107,7 @@ const sortedGuests = [...filteredGuests].sort((a, b) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
           {sortedGuests.map(guest => {
             const bookings = getBookingsForGuest(guest.id);
-            const activeBooking = bookings.find(b => b.checkInDateTime && !b.checkOutDateTime);
+            const activeBookings = bookings.filter(b => b.checkInDateTime && !b.checkOutDateTime);
             const pastBookings = bookings.filter(b => b.checkOutDateTime);
             const futureBookings = bookings.filter(b => !b.checkInDateTime && !b.cancelledAt);
             const cancelledBookings = bookings.filter(b => b.cancelledAt).length;
@@ -134,15 +134,24 @@ const sortedGuests = [...filteredGuests].sort((a, b) => {
                     </div>
                   </div>
                   
-                  {activeBooking && (
+                  {activeBookings.length > 0 && (
                     <div className="bg-teal-50 p-3 rounded-md mb-3">
                       <p className="text-sm font-medium text-teal-800">Currently Staying</p>
-                      <p className="text-xs text-teal-700">
-                        Room: {getRoomById(activeBooking.roomId).roomNumber}, 
-                        Check-in: {format(parseISO(activeBooking.checkInDateTime!), 'dd/MM/yyyy')}
-                      </p>
+                      <ul className="text-xs text-teal-700 space-y-1">
+                        {activeBookings.slice(0, 2).map(booking => (
+                          <li key={booking.id}>
+                            Room: {getRoomById(booking.roomId).roomNumber}, Check-in: {format(parseISO(booking.checkInDateTime!), 'dd/MM/yyyy')}
+                          </li>
+                        ))}
+                        {activeBookings.length > 2 && (
+                          <li className="text-teal-700 font-medium">
+                            + {activeBookings.length - 2} more currently staying
+                          </li>
+                        )}
+                      </ul>
                     </div>
                   )}
+
                   
                   {futureBookings.length > 0 && (
                     <div className="mb-3">
