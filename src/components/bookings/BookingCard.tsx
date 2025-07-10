@@ -184,14 +184,17 @@ const BookingCard: React.FC<BookingCardProps> = ({
   return (
     <>
       <div
-  className={`card border w-full ${
-    booking.checkOutDateTime
-      ? 'bg-green-100 border-green-300'
-      : booking.checkInDateTime
-      ? 'bg-red-200 border-red-400'
-      : 'bg-amber-100 border-amber-300'
-  } ${variant === 'list' ? 'p-2' : 'p-3'}`}
->
+        className={`card border w-full ${
+          booking.cancelledAt
+            ? 'bg-white border-gray-300'
+            : booking.checkOutDateTime
+            ? 'bg-green-100 border-green-300'
+            : booking.checkInDateTime
+            ? 'bg-red-200 border-red-400'
+            : 'bg-amber-100 border-amber-300'
+        } ${variant === 'list' ? 'p-2' : 'p-3'}`}
+      >
+
 
 
 
