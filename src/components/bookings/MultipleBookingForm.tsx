@@ -201,7 +201,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
         >
           <ArrowLeft className="h-5 w-5 text-gray-600" />
         </button>
-        <h2 className="text-xl font-bold">Create Multiple Bookings</h2>
+        <h2 className="text-xl font-bold">Create Bookings</h2>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-6">
