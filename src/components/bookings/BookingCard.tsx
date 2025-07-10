@@ -186,7 +186,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
       <div
   className={`card border w-full ${
     booking.checkOutDateTime
-      ? 'bg-green-300 border-green-300'
+      ? 'bg-green-200 border-green-300'
       : booking.checkInDateTime
       ? 'bg-red-300 border-red-300'
       : 'bg-yellow-300 border-yellow-300'
