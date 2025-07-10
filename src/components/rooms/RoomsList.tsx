@@ -100,7 +100,7 @@ if (isAvailable || !earliestBooking) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
       <div>
         <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
           <span className="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span>
