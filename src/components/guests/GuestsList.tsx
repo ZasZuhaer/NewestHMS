@@ -98,7 +98,7 @@ const sortedGuests = [...filteredGuests].sort((a, b) => {
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search by name, ID or phone..."
+          placeholder="Search by Name, ID or Phone..."
           className="input border-0 focus:ring-0"
         />
       </div>
