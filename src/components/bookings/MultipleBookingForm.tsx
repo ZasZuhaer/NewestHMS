@@ -278,19 +278,17 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
               <label htmlFor="numberOfRooms" className="block text-sm font-medium text-gray-700 mb-1">
                 Number of Rooms*
               </label>
-              <select
+              <input
+                type="number"
                 id="numberOfRooms"
                 value={numberOfRooms}
                 onChange={(e) => setNumberOfRooms(e.target.value)}
+                min="1"
+                max="10"
+                placeholder="Enter number of rooms"
                 className="w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                 required
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                  <option key={num} value={num.toString()}>
-                    {num} {num === 1 ? 'Room' : 'Rooms'}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
           </div>
           
