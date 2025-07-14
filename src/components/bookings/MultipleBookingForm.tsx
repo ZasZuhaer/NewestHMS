@@ -29,6 +29,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
   const [guestName, setGuestName] = useState(prefilledGuest?.name || '');
   const [nationalId, setNationalId] = useState(prefilledGuest?.nationalId || '');
   const [phone, setPhone] = useState(prefilledGuest?.phone || '');
+  const [numberOfRooms, setNumberOfRooms] = useState('1');
   const [selectedRooms, setSelectedRooms] = useState<SelectedRoom[]>([]);
   const [totalAmount, setTotalAmount] = useState('');
   const [paidAmount, setPaidAmount] = useState('');
@@ -41,6 +42,36 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
     if (a.floor !== b.floor) return a.floor - b.floor;
     return a.roomNumber.localeCompare(b.roomNumber);
   });
+  
+  // Update selected rooms when number of rooms changes
+  useEffect(() => {
+    const targetCount = parseInt(numberOfRooms) || 1;
+    const currentCount = selectedRooms.length;
+    
+    if (targetCount > currentCount) {
+      // Add more rooms
+      const availableRooms = rooms.filter(room => 
+        !selectedRooms.some(selected => selected.id === room.id)
+      );
+      
+      const roomsToAdd = targetCount - currentCount;
+      const newRooms: SelectedRoom[] = [];
+      
+      for (let i = 0; i < roomsToAdd && i < availableRooms.length; i++) {
+        const room = availableRooms[i];
+        newRooms.push({
+          id: room.id,
+          roomNumber: room.roomNumber,
+          numberOfPeople: 1
+        });
+      }
+      
+      setSelectedRooms([...selectedRooms, ...newRooms]);
+    } else if (targetCount < currentCount) {
+      // Remove excess rooms
+      setSelectedRooms(selectedRooms.slice(0, targetCount));
+    }
+  }, [numberOfRooms, rooms]);
   
   // Auto-fill guest information when National ID matches
   useEffect(() => {
@@ -77,28 +108,6 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       setAvailabilityErrors([]);
     }
   }, [bookingDate, durationDays, selectedRooms, isRoomAvailable]);
-
-  const handleAddRoom = () => {
-    const availableRooms = rooms.filter(room => 
-      !selectedRooms.some(selected => selected.id === room.id)
-    );
-    
-    if (availableRooms.length === 0) {
-      toast.error('No more rooms available to add');
-      return;
-    }
-    
-    const firstAvailable = availableRooms[0];
-    setSelectedRooms([...selectedRooms, {
-      id: firstAvailable.id,
-      roomNumber: firstAvailable.roomNumber,
-      numberOfPeople: 1
-    }]);
-  };
-
-  const handleRemoveRoom = (index: number) => {
-    setSelectedRooms(selectedRooms.filter((_, i) => i !== index));
-  };
 
   const handleRoomChange = (index: number, roomId: string) => {
     const room = rooms.find(r => r.id === roomId);
@@ -262,32 +271,44 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
 
         {/* Room Selection */}
         <div>
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">Rooms*</h3>
-            <button
-              type="button"
-              onClick={handleAddRoom}
-              className="inline-flex items-center px-3 py-1.5 text-sm border border-transparent rounded-md shadow-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              Add Room
-            </button>
+          <div className="mb-4">
+            <h3 className="font-medium mb-4">Room Selection*</h3>
+            
+            <div className="mb-4">
+              <label htmlFor="numberOfRooms" className="block text-sm font-medium text-gray-700 mb-1">
+                Number of Rooms*
+              </label>
+              <select
+                id="numberOfRooms"
+                value={numberOfRooms}
+                onChange={(e) => setNumberOfRooms(e.target.value)}
+                className="w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                required
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+                  <option key={num} value={num.toString()}>
+                    {num} {num === 1 ? 'Room' : 'Rooms'}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           
-          {selectedRooms.length === 0 ? (
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              <p className="text-gray-500">No rooms selected. Click "Add Room" to start.</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {selectedRooms.map((selectedRoom, index) => (
+          <div className="space-y-3">
+            {Array.from({ length: parseInt(numberOfRooms) || 1 }, (_, index) => {
+              const selectedRoom = selectedRooms[index];
+              return (
                 <div key={index} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg">
+                  <div className="w-16 text-sm font-medium text-gray-700 flex items-center justify-center">
+                    Room {index + 1}
+                  </div>
+                  
                   <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Room
+                      Select Room
                     </label>
                     <select
-                      value={selectedRoom.id}
+                      value={selectedRoom?.id || ''}
                       onChange={(e) => handleRoomChange(index, e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                       required
@@ -295,8 +316,8 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                       <option value="">Select Room</option>
                       {rooms
                         .filter(room => 
-                          room.id === selectedRoom.id || 
-                          !selectedRooms.some(selected => selected.id === room.id)
+                          room.id === selectedRoom?.id || 
+                          !selectedRooms.some(selected => selected?.id === room.id)
                         )
                         .map(room => (
                           <option key={room.id} value={room.id}>
@@ -312,25 +333,17 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                     </label>
                     <input
                       type="number"
-                      value={selectedRoom.numberOfPeople}
+                      value={selectedRoom?.numberOfPeople || 1}
                       onChange={(e) => handlePeopleChange(index, parseInt(e.target.value) || 1)}
                       min="1"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                       required
                     />
                   </div>
-                  
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveRoom(index)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-full"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
                 </div>
-              ))}
-            </div>
-          )}
+              );
+            })}
+          </div>
           
           {selectedRooms.length > 0 && (
             <div className="mt-3 text-sm text-gray-600">
@@ -440,10 +453,10 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
           </button>
           <button
             type="submit"
-            disabled={availabilityErrors.length > 0 || selectedRooms.length === 0}
+            disabled={availabilityErrors.length > 0 || selectedRooms.length !== parseInt(numberOfRooms)}
             className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:bg-gray-400"
           >
-            Create {selectedRooms.length} Booking{selectedRooms.length !== 1 ? 's' : ''}
+            Create {numberOfRooms} Booking{parseInt(numberOfRooms) !== 1 ? 's' : ''}
           </button>
         </div>
       </form>
