@@ -291,7 +291,6 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
               <h3 className="text-xl font-semibold mb-6">Booking History</h3>
             )}
             
-            
             {!isEditing && (
               <div className="space-y-6">
               {/* Current Bookings */}
