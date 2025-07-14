@@ -336,7 +336,6 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
         {bookingDate && durationDays && (
           <div>
             <div className="mb-4">
-              
               <div className="mb-4">
                 <label htmlFor="numberOfRooms" className="block text-sm font-medium text-gray-700 mb-1">
                   Number of Rooms*
