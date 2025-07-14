@@ -327,30 +327,34 @@ export const useBookingStore = create<BookingState>((set, get) => ({
   },
 
   getAvailableRoomIds: (startDate: string, endDate: string) => {
+    const allRooms = get().rooms || []; // We need to get all rooms from somewhere
     const allBookings = get().getAllBookings();
-    const occupiedRoomIds = new Set<string>();
+    const unavailableRoomIds = new Set<string>();
     
     const requestStart = startOfDay(parseISO(startDate));
     const requestEnd = startOfDay(addDays(parseISO(endDate), -1));
     
     allBookings.forEach((booking) => {
-      if (booking.checkOutDateTime) return; // Room is available if booking is checked out
+      // Skip if booking is checked out or cancelled
+      if (booking.checkOutDateTime || booking.cancelledAt) return;
       
       const bookingStart = startOfDay(parseISO(booking.bookingDate));
       const bookingEnd = startOfDay(addDays(parseISO(booking.bookingDate), booking.durationDays - 1));
       
+      // Check if there's any overlap between request period and booking period
       if (
         (isWithinInterval(requestStart, { start: bookingStart, end: bookingEnd }) ||
          isWithinInterval(requestEnd, { start: bookingStart, end: bookingEnd }) ||
          (isBefore(requestStart, bookingStart) && isAfter(requestEnd, bookingEnd)))
       ) {
-        occupiedRoomIds.add(booking.roomId);
+        unavailableRoomIds.add(booking.roomId);
       }
     });
     
-    return get().bookings
-      .map((booking) => booking.roomId)
-      .filter((roomId) => !occupiedRoomIds.has(roomId));
+    // We need access to all rooms, not just booked rooms
+    // This is a temporary fix - we should get all room IDs from room store
+    const allRoomIds = Array.from(new Set(allBookings.map(b => b.roomId)));
+    return allRoomIds.filter((roomId) => !unavailableRoomIds.has(roomId));
   },
 
   getOccupiedRoomIds: () => {
