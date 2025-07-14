@@ -48,9 +48,9 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
     if (!bookingDate || !durationDays) return [];
     
     const endDateValue = format(addDays(parseISO(bookingDate), parseInt(durationDays, 10)), 'yyyy-MM-dd');
-    const availableRoomIds = getAvailableRoomIds(bookingDate, endDateValue);
     
-    return rooms.filter(room => availableRoomIds.includes(room.id));
+    // Filter rooms based on availability for the selected dates
+    return rooms.filter(room => isRoomAvailable(room.id, bookingDate, endDateValue));
   }, [rooms, bookingDate, durationDays, getAvailableRoomIds]);
   
   // Update selected rooms when number of rooms changes
