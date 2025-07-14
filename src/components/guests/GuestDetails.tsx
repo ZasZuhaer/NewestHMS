@@ -287,7 +287,10 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
           
           {/* Bookings */}
           <div className="lg:col-span-2">
-            <h3 className="text-xl font-semibold mb-6">Booking History</h3>
+            {!isEditing && (
+              <h3 className="text-xl font-semibold mb-6">Booking History</h3>
+            )}
+            
             
             {!isEditing && (
               <div className="space-y-6">
