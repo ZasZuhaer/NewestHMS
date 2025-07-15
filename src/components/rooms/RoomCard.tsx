@@ -35,7 +35,7 @@ Room {room.roomNumber}</h3>
           <div className="flex items-center space-x-3 text-gray-600">
             <div className="flex items-center">
               <BedDouble className="h-3 w-3 md:h-4 md:w-4" />
-              <span className="ml-0.5 md:ml-1 text-xs sm:text-sm">{room.beds}</span>
+              <span className="ml-0.5 md:ml-1 text-xs md:text-sm">{room.beds}</span>
 
             </div>
             <div className="flex items-center">
