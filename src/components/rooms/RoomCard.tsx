@@ -44,7 +44,7 @@ Room {room.roomNumber}</h3>
 
             </div>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <span className="text-[10px] 2xl:text-xs font-medium bg-blue-100 text-blue-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
               {room.category}
             </span>
