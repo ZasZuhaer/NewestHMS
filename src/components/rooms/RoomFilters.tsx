@@ -113,7 +113,9 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
         </div>
         
         <div>
-          
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            
+          </label>
           <div className="flex items-center h-[38px]">
             <input
               type="checkbox"
