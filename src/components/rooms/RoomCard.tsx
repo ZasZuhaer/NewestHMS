@@ -49,7 +49,7 @@ Room {room.roomNumber}</h3>
               {room.category}
             </span>
             {room.problems.length > 0 && (
-              <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-red-600" />
+              <AlertTriangle className="h-3 w-3 text-red-600" />
             )}
           </div>
         </div>
