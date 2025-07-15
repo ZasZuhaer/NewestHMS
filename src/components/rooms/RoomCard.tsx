@@ -39,8 +39,8 @@ Room {room.roomNumber}</h3>
 
             </div>
             <div className="flex items-center">
-              <Thermometer className="h-3 w-3 md:h-4 md:w-4" />
-              <span className="ml-0.5 md:ml-1 text-xs md:text-sm">{room.hasAC ? 'AC' : '-'}</span>
+              <Thermometer className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="ml-0.5 sm:ml-1 text-xs sm:text-sm">{room.hasAC ? 'AC' : '-'}</span>
 
             </div>
           </div>
