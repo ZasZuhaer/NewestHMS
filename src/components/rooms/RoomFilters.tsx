@@ -123,7 +123,7 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
               onChange={(e) => handleACChange(e.target.checked)}
               className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
             />
-            <label htmlFor="hasAC" className="ml-2 text-sm text-gray-700">
+            <label htmlFor="hasAC" className="ml-2 text-sm text-gray-700 whitespace-nowrap">
               AC Only
             </label>
           </div>
