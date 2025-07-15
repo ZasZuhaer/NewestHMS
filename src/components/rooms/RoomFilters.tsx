@@ -10,6 +10,7 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
   const [category, setCategory] = useState<RoomCategory | ''>('');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+  const [hasAC, setHasAC] = useState<boolean>(false);
   
   const categories: RoomCategory[] = ['Double', 'Couple', 'Connecting'];
   
@@ -28,6 +29,7 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
       category: category ? category as RoomCategory : undefined,
       startDate: startDate || undefined,
       endDate: effectiveEndDate || undefined,
+      hasAC: hasAC || undefined,
     });
   };
   
@@ -35,12 +37,13 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
     setCategory('');
     setStartDate('');
     setEndDate('');
+    setHasAC(false);
     onFilterChange({});
   };
   
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-4 mb-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div>
           <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
             Room Category
@@ -86,6 +89,24 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
             className="w-full h-[38px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
             disabled={!startDate}
           />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Air Conditioning
+          </label>
+          <div className="flex items-center h-[38px]">
+            <input
+              type="checkbox"
+              id="hasAC"
+              checked={hasAC}
+              onChange={(e) => setHasAC(e.target.checked)}
+              className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+            />
+            <label htmlFor="hasAC" className="ml-2 text-sm text-gray-700">
+              AC Only
+            </label>
+          </div>
         </div>
         
         <div className="flex items-end space-x-2">

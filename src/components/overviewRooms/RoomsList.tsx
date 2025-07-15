@@ -32,6 +32,11 @@ const RoomsList: React.FC<RoomsListProps> = ({ onSelectRoom, filter }) => {
   const filteredRooms = useMemo(() => {
     let rooms = filter.category ? getRoomsByCategory(filter.category) : getAllRooms();
     
+    // Filter by AC if specified
+    if (filter.hasAC) {
+      rooms = rooms.filter(room => room.hasAC);
+    }
+    
     return rooms.sort((a, b) => {
       // Sort by floor first
       if (a.floor !== b.floor) {

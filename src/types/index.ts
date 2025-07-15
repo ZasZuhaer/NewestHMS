@@ -61,4 +61,5 @@ export type RoomFilter = {
   category?: RoomCategory;
   startDate?: string;
   endDate?: string;
+  hasAC?: boolean;
 };
