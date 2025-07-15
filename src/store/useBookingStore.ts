@@ -327,34 +327,9 @@ export const useBookingStore = create<BookingState>((set, get) => ({
   },
 
   getAvailableRoomIds: (startDate: string, endDate: string) => {
-    const allRooms = get().rooms || []; // We need to get all rooms from somewhere
-    const allBookings = get().getAllBookings();
-    const unavailableRoomIds = new Set<string>();
-    
-    const requestStart = startOfDay(parseISO(startDate));
-    const requestEnd = startOfDay(addDays(parseISO(endDate), -1));
-    
-    allBookings.forEach((booking) => {
-      // Skip if booking is checked out or cancelled
-      if (booking.checkOutDateTime || booking.cancelledAt) return;
-      
-      const bookingStart = startOfDay(parseISO(booking.bookingDate));
-      const bookingEnd = startOfDay(addDays(parseISO(booking.bookingDate), booking.durationDays - 1));
-      
-      // Check if there's any overlap between request period and booking period
-      if (
-        (isWithinInterval(requestStart, { start: bookingStart, end: bookingEnd }) ||
-         isWithinInterval(requestEnd, { start: bookingStart, end: bookingEnd }) ||
-         (isBefore(requestStart, bookingStart) && isAfter(requestEnd, bookingEnd)))
-      ) {
-        unavailableRoomIds.add(booking.roomId);
-      }
-    });
-    
-    // We need access to all rooms, not just booked rooms
-    // This is a temporary fix - we should get all room IDs from room store
-    const allRoomIds = Array.from(new Set(allBookings.map(b => b.roomId)));
-    return allRoomIds.filter((roomId) => !unavailableRoomIds.has(roomId));
+    // This function should not exist in booking store since it doesn't have access to all rooms
+    // It should be implemented where both room and booking stores are available
+    return [];
   },
 
   getOccupiedRoomIds: () => {
