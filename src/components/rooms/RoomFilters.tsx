@@ -14,6 +14,26 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
   
   const categories: RoomCategory[] = ['Double', 'Couple', 'Connecting'];
   
+  // Apply filters immediately when AC checkbox changes
+  const handleACChange = (checked: boolean) => {
+    setHasAC(checked);
+    
+    // Apply filter immediately
+    let effectiveEndDate = endDate;
+    if (startDate && !endDate) {
+      const nextDay = new Date(startDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      effectiveEndDate = nextDay.toISOString().split('T')[0];
+    }
+    
+    onFilterChange({
+      category: category ? category as RoomCategory : undefined,
+      startDate: startDate || undefined,
+      endDate: effectiveEndDate || undefined,
+      hasAC: checked || undefined,
+    });
+  };
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -29,7 +49,7 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
       category: category ? category as RoomCategory : undefined,
       startDate: startDate || undefined,
       endDate: effectiveEndDate || undefined,
-      hasAC: hasAC || undefined,
+      hasAC: hasAC ? true : undefined,
     });
   };
   
@@ -38,6 +58,7 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
     setStartDate('');
     setEndDate('');
     setHasAC(false);
+    // Apply cleared filters immediately
     onFilterChange({});
   };
   
@@ -100,7 +121,7 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
               type="checkbox"
               id="hasAC"
               checked={hasAC}
-              onChange={(e) => setHasAC(e.target.checked)}
+              onChange={(e) => handleACChange(e.target.checked)}
               className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
             />
             <label htmlFor="hasAC" className="ml-2 text-sm text-gray-700">

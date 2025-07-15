@@ -33,7 +33,7 @@ const RoomsList: React.FC<RoomsListProps> = ({ onSelectRoom, filter }) => {
     let rooms = filter.category ? getRoomsByCategory(filter.category) : getAllRooms();
     
     // Filter by AC if specified
-    if (filter.hasAC) {
+    if (filter.hasAC === true) {
       rooms = rooms.filter(room => room.hasAC);
     }
     
@@ -45,7 +45,7 @@ const RoomsList: React.FC<RoomsListProps> = ({ onSelectRoom, filter }) => {
       // Then by room number
       return a.roomNumber.localeCompare(b.roomNumber);
     });
-  }, [getAllRooms, getRoomsByCategory, filter.category]);
+  }, [getAllRooms, getRoomsByCategory, filter.category, filter.hasAC]);
 
   // Separate available and occupied/booked rooms based on date filter
   const { availableRooms, occupiedOrBookedRooms } = useMemo(() => {
