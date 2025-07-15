@@ -390,7 +390,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                             )
                             .map(room => (
                               <option key={room.id} value={room.id}>
-                                Room {room.roomNumber} - {room.category} ({room.beds} beds)
+                                Room {room.roomNumber} - {room.category} ({room.beds} beds){room.hasAC ? ' - AC' : ''}
                               </option>
                             ))}
                         </select>
