@@ -64,7 +64,7 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
   
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-4 mb-6">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div>
           <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
             Room Category
