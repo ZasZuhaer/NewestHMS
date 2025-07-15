@@ -58,7 +58,7 @@ Room {room.roomNumber}</h3>
       {currentBooking && (
         <div className="pt-2">
           <p className="ml-1 text-sm font-medium">{currentBooking.guestName}</p>
-          <div className="ml-1 flex justify-between text-xs text-gray-500 mt-1">
+          <div className="ml-1 mr-1 flex justify-between text-xs text-gray-500 mt-1">
             <span>
               {format(parseISO(currentBooking.bookingDate), 'dd/MM/yyyy')} -{' '} 
               {format(addDays(parseISO(currentBooking.bookingDate), currentBooking.durationDays), 'dd/MM/yyyy')}
