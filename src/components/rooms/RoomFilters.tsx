@@ -114,7 +114,7 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
         
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            
+            Air Conditionings
           </label>
           <div className="flex items-center h-[38px]">
             <input
