@@ -23,7 +23,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room, currentBooking, onClick, isAv
 
   return (
     <div 
-      className={`card card-hover border ${getStatusColor()} p-2`}
+      className={`card card-hover border ${getStatusColor()} p-1`}
       onClick={onClick}
       role="button"
       tabIndex={0}
