@@ -112,10 +112,9 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
           />
         </div>
         
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Air Conditioning
-          </label>
+        
+        <div className="flex items-end space-x-2">
+
           <div className="flex items-center h-[38px]">
             <input
               type="checkbox"
@@ -128,9 +127,7 @@ const RoomFilters: React.FC<RoomFiltersProps> = ({ onFilterChange }) => {
               AC Only
             </label>
           </div>
-        </div>
-        
-        <div className="flex items-end space-x-2">
+          
           <button
             type="submit"
             className="flex-1 inline-flex items-center justify-center px-2 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
