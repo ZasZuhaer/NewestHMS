@@ -127,7 +127,7 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onDeleted }) 
           >
             <ArrowLeft className="h-5 w-5 text-gray-600" />
           </button>
-          <h2 className="text-xl font-bold">Book Room {room.roomNumber}</h2>
+          <h2 className="text-xl font-bold">Create Bookings</h2>
         </div>
         
         <MultipleBookingForm 

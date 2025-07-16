@@ -408,7 +408,12 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                           required
                         >
-                          <option value="">{index === 0 && preselectedRoom ? `Room ${preselectedRoom.roomNumber} (Pre-selected)` : 'Select Room'}</option>
+                          <option value="">
+                            {index === 0 && preselectedRoom 
+                              ? `Room ${preselectedRoom.roomNumber} - ${preselectedRoom.category} (${preselectedRoom.beds} beds)${preselectedRoom.hasAC ? ' - AC' : ''}`
+                              : 'Select Room'
+                            }
+                          </option>
                           {availableRooms
                             .filter(room => 
                               room.id === selectedRoom?.id || 
@@ -421,11 +426,6 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                               </option>
                             ))}
                         </select>
-                        {index === 0 && preselectedRoom && (
-                          <p className="text-xs text-gray-500 mt-1">
-                            This room is pre-selected and cannot be changed
-                          </p>
-                        )}
                       </div>
                       
                       <div className="w-32">
@@ -506,12 +506,6 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
           </div>
         )}
         
-        {preselectedRoomUnavailable && preselectedRoom && (
-          <div className="bg-red-50 p-3 rounded-md text-red-800">
-            <p>Room {preselectedRoom.roomNumber} is not available for the selected date</p>
-          </div>
-        )}
-        
         {availabilityErrors.length > 0 && (
           <div className="bg-red-50 p-3 rounded-md text-red-800">
             <ul className="list-disc list-inside">
@@ -519,6 +513,12 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                 <li key={index}>{error}</li>
               ))}
             </ul>
+          </div>
+        )}
+        
+        {preselectedRoomUnavailable && preselectedRoom && (
+          <div className="bg-red-50 p-3 rounded-md text-red-800">
+            <p>Room {preselectedRoom.roomNumber} is not available for the selected date</p>
           </div>
         )}
         
