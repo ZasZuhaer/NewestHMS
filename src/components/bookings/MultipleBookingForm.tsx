@@ -516,12 +516,6 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
           </div>
         )}
         
-        {preselectedRoomUnavailable && preselectedRoom && (
-          <div className="bg-red-50 p-3 rounded-md text-red-800">
-            <p>Room {preselectedRoom.roomNumber} is not available for the selected date</p>
-          </div>
-        )}
-        
         <div className="flex justify-end space-x-3 pt-4 border-t">
           <button
             type="button"
