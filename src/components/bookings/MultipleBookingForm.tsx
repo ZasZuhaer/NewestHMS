@@ -413,7 +413,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                                 : selectedRoom?.category === "Couple" 
                                   ? 2 
                                   : 1
-                          }
+                          } 
                           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                           required
                         />
