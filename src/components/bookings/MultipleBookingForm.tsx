@@ -155,17 +155,6 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
     return selectedRooms.reduce((total, room) => total + room.numberOfPeople, 0);
   };
 
-  const getMaxGuests = (category: RoomCategory) => {
-    switch (category) {
-      case 'Couple':
-        return 2;
-      case 'Double':
-        return 5;
-      case 'Connecting':
-        return 10;
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -416,7 +405,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                           value={selectedRoom?.numberOfPeople || 1}
                           onChange={(e) => handlePeopleChange(index, parseInt(e.target.value) || 1)}
                           min="1"
-                          max={getMaxGuests(room.category)}
+                          max=
                           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                           required
                         />
