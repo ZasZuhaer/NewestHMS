@@ -19,12 +19,18 @@ const OverviewPage: React.FC = () => {
   const handleBackToRooms = () => {
     setSelectedRoomId(null);
   };
+  
+  const handleCreateBookingFromRoom = (roomId: string) => {
+    // In overview page, we don't have booking functionality
+    // This is just to satisfy the interface
+  };
     
   if (selectedRoomId) {
     return (
       <RoomDetails
         roomId={selectedRoomId}
         onBack={handleBackToRooms}
+        onCreateBooking={handleCreateBookingFromRoom}
       />
     );
   }

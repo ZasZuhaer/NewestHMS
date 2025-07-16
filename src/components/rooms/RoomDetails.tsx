@@ -4,8 +4,6 @@ import { ArrowLeft, BedDouble, Droplets, Thermometer, Edit, Trash, AlertTriangle
 import { useRoomStore } from '../../store/useRoomStore';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useAuthStore } from '../../store/useAuthStore';
-import BookingForm from '../bookings/BookingForm';
-import MultipleBookingForm from '../bookings/MultipleBookingForm';
 import BookingCard from '../bookings/BookingCard';
 import RoomForm from './RoomForm';
 import { format, parseISO, addDays } from 'date-fns';
@@ -14,16 +12,16 @@ import toast from 'react-hot-toast';
 interface RoomDetailsProps {
   roomId: string;
   onBack: () => void;
+  onCreateBooking?: (roomId: string) => void;
   onDeleted?: () => void;
 }
 
-const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onDeleted }) => {
+const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onCreateBooking, onDeleted }) => {
   const { getRoomById, deleteRoom } = useRoomStore();
   const { getBookingsForRoom, getCurrentBookingsForRoom, getFutureBookingsForRoom } = useBookingStore();
   const { getCurrentUserRole } = useAuthStore();
   
   const [isEditing, setIsEditing] = useState(false);
-  const [isBooking, setIsBooking] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   
@@ -85,10 +83,10 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onDeleted }) 
     toast.success("Room updated successfully");
   };
   
-  const handleBookingCreated = () => {
-    setIsBooking(false);
-    setRefreshKey(prev => prev + 1);
-    toast.success("Booking created successfully");
+  const handleCreateBooking = () => {
+    if (onCreateBooking) {
+      onCreateBooking(roomId);
+    }
   };
 
   const handleBookingUpdated = () => {
@@ -112,28 +110,6 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onDeleted }) 
           initialRoom={room} 
           onSubmit={handleRoomUpdated} 
           onCancel={() => setIsEditing(false)} 
-        />
-      </div>
-    );
-  }
-  
-  if (isBooking) {
-    return (
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex items-center mb-6">
-          <button
-            onClick={() => setIsBooking(false)}
-            className="mr-2 p-2 rounded-full hover:bg-gray-100"
-          >
-            <ArrowLeft className="h-5 w-5 text-gray-600" />
-          </button>
-          <h2 className="text-xl font-bold">Create Bookings</h2>
-        </div>
-        
-        <MultipleBookingForm 
-          onSubmit={handleBookingCreated} 
-          onCancel={() => setIsBooking(false)}
-          preselectedRoomId={roomId}
         />
       </div>
     );
@@ -225,7 +201,7 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onDeleted }) 
               <h3 className="text-lg font-semibold">Current & Future Bookings</h3>
               
               <button
-                onClick={() => setIsBooking(true)}
+                onClick={handleCreateBooking}
                 className="inline-flex items-center px-3 py-1.5 text-sm border border-transparent rounded-md shadow-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
               >
                 <Plus className="h-4 w-4 mr-1" />

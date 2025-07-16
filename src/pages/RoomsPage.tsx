@@ -13,6 +13,7 @@ const RoomsPage: React.FC = () => {
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [isAddingRoom, setIsAddingRoom] = useState(false);
   const [isCreatingMultipleBooking, setIsCreatingMultipleBooking] = useState(false);
+  const [bookingRoomId, setBookingRoomId] = useState<string | null>(null);
   const [filter, setFilter] = useState<RoomFilter>({});
   const { getCurrentUserRole } = useAuthStore();
   
@@ -39,11 +40,19 @@ const RoomsPage: React.FC = () => {
   
   const handleMultipleBookingCreated = () => {
     setIsCreatingMultipleBooking(false);
+    setBookingRoomId(null);
     toast.success('Multiple bookings created successfully');
   };
   
   const handleCancelMultipleBooking = () => {
     setIsCreatingMultipleBooking(false);
+    setBookingRoomId(null);
+  };
+  
+  const handleCreateBookingFromRoom = (roomId: string) => {
+    setSelectedRoomId(null);
+    setBookingRoomId(roomId);
+    setIsCreatingMultipleBooking(true);
   };
   
   const isAdmin = getCurrentUserRole() === 'admin';
@@ -67,6 +76,7 @@ const RoomsPage: React.FC = () => {
       <MultipleBookingPage
         onSubmit={handleMultipleBookingCreated}
         onCancel={handleCancelMultipleBooking}
+        preselectedRoomId={bookingRoomId}
       />
     );
   }
@@ -76,6 +86,7 @@ const RoomsPage: React.FC = () => {
       <RoomDetails
         roomId={selectedRoomId}
         onBack={handleBackToRooms}
+        onCreateBooking={handleCreateBookingFromRoom}
       />
     );
   }
