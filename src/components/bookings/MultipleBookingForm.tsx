@@ -17,11 +17,12 @@ interface MultipleBookingFormProps {
   onSubmit: () => void;
   onCancel: () => void;
   prefilledGuest?: Guest;
+  preselectedRoomId?: string;
 }
 
-const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onCancel, prefilledGuest }) => {
+const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onCancel, prefilledGuest, preselectedRoomId }) => {
   const { findOrCreateGuest, getAllGuests } = useGuestStore();
-  const { getAllRooms } = useRoomStore();
+  const { getAllRooms, getRoomById } = useRoomStore();
   const { addBooking, isRoomAvailable, getAvailableRoomIds } = useBookingStore();
   
   const today = format(new Date(), 'yyyy-MM-dd');
@@ -35,6 +36,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
   const [selectedRooms, setSelectedRooms] = useState<SelectedRoom[]>([]);
   const [totalAmount, setTotalAmount] = useState('');
   const [paidAmount, setPaidAmount] = useState('');
+  const [preselectedRoomUnavailable, setPreselectedRoomUnavailable] = useState(false);
   
   const [availabilityErrors, setAvailabilityErrors] = useState<string[]>([]);
   
@@ -42,6 +44,8 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
     if (a.floor !== b.floor) return a.floor - b.floor;
     return a.roomNumber.localeCompare(b.roomNumber);
   });
+  
+  const preselectedRoom = preselectedRoomId ? getRoomById(preselectedRoomId) : null;
   
   // Get available rooms based on booking date and duration
   const availableRooms = useMemo(() => {
@@ -75,11 +79,20 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       const newRooms: SelectedRoom[] = [];
       
       for (let i = 0; i < roomsToAdd; i++) {
-        newRooms.push({
-          id: '',
-          roomNumber: '',
-          numberOfPeople: 1
-        });
+        // If this is the first room and we have a preselected room, use it
+        if (currentCount + i === 0 && preselectedRoom) {
+          newRooms.push({
+            id: preselectedRoom.id,
+            roomNumber: preselectedRoom.roomNumber,
+            numberOfPeople: 1
+          });
+        } else {
+          newRooms.push({
+            id: '',
+            roomNumber: '',
+            numberOfPeople: 1
+          });
+        }
       }
       
       setSelectedRooms([...selectedRooms, ...newRooms]);
@@ -87,7 +100,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       // Remove excess rooms
       setSelectedRooms(selectedRooms.slice(0, targetCount));
     }
-  }, [numberOfRooms, availableRooms, bookingDate, durationDays]);
+  }, [numberOfRooms, availableRooms, bookingDate, durationDays, preselectedRoom]);
   
   // Auto-fill guest information when National ID matches
   useEffect(() => {
@@ -109,6 +122,13 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
   
   // Check room availability when booking date, duration, or selected rooms change
   useEffect(() => {
+    // Check if preselected room is available
+    if (preselectedRoom && bookingDate && durationDays) {
+      const endDateValue = format(addDays(parseISO(bookingDate), parseInt(durationDays, 10)), 'yyyy-MM-dd');
+      const isPreselectedAvailable = isRoomAvailable(preselectedRoom.id, bookingDate, endDateValue);
+      setPreselectedRoomUnavailable(!isPreselectedAvailable);
+    }
+    
     if (bookingDate && durationDays && selectedRooms.some(room => room.id)) {
       const endDateValue = format(addDays(parseISO(bookingDate), parseInt(durationDays, 10)), 'yyyy-MM-dd');
       const errors: string[] = [];
@@ -123,9 +143,14 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
     } else {
       setAvailabilityErrors([]);
     }
-  }, [bookingDate, durationDays, selectedRooms, isRoomAvailable]);
+  }, [bookingDate, durationDays, selectedRooms, isRoomAvailable, preselectedRoom]);
 
   const handleRoomChange = (index: number, roomId: string) => {
+    // Don't allow changing the first room if it's preselected
+    if (index === 0 && preselectedRoom) {
+      return;
+    }
+    
     const room = availableRooms.find(r => r.id === roomId);
     
     const updatedRooms = [...selectedRooms];
@@ -379,14 +404,16 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                         <select
                           value={selectedRoom?.id || ''}
                           onChange={(e) => handleRoomChange(index, e.target.value)}
+                          disabled={index === 0 && !!preselectedRoom}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                           required
                         >
-                          <option value="">Select Room</option>
+                          <option value="">{index === 0 && preselectedRoom ? `Room ${preselectedRoom.roomNumber} (Pre-selected)` : 'Select Room'}</option>
                           {availableRooms
                             .filter(room => 
                               room.id === selectedRoom?.id || 
-                              !selectedRooms.some(selected => selected?.id === room.id)
+                              !selectedRooms.some(selected => selected?.id === room.id) ||
+                              (index === 0 && preselectedRoom && room.id === preselectedRoom.id)
                             )
                             .map(room => (
                               <option key={room.id} value={room.id}>
@@ -394,6 +421,11 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                               </option>
                             ))}
                         </select>
+                        {index === 0 && preselectedRoom && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            This room is pre-selected and cannot be changed
+                          </p>
+                        )}
                       </div>
                       
                       <div className="w-32">
@@ -474,6 +506,12 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
           </div>
         )}
         
+        {preselectedRoomUnavailable && preselectedRoom && (
+          <div className="bg-red-50 p-3 rounded-md text-red-800">
+            <p>Room {preselectedRoom.roomNumber} is not available for the selected date</p>
+          </div>
+        )}
+        
         {availabilityErrors.length > 0 && (
           <div className="bg-red-50 p-3 rounded-md text-red-800">
             <ul className="list-disc list-inside">
@@ -498,7 +536,8 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
               availabilityErrors.length > 0 || 
               selectedRooms.length !== parseInt(numberOfRooms) ||
               selectedRooms.some(room => !room.id) ||
-              availableRooms.length === 0
+              availableRooms.length === 0 ||
+              preselectedRoomUnavailable
             }
             className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:bg-gray-400"
           >

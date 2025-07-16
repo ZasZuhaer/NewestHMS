@@ -5,6 +5,7 @@ import { useRoomStore } from '../../store/useRoomStore';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import BookingForm from '../bookings/BookingForm';
+import MultipleBookingForm from '../bookings/MultipleBookingForm';
 import BookingCard from '../bookings/BookingCard';
 import RoomForm from './RoomForm';
 import { format, parseISO, addDays } from 'date-fns';
@@ -129,10 +130,10 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onDeleted }) 
           <h2 className="text-xl font-bold">Book Room {room.roomNumber}</h2>
         </div>
         
-        <BookingForm 
-          roomId={roomId} 
+        <MultipleBookingForm 
           onSubmit={handleBookingCreated} 
-          onCancel={() => setIsBooking(false)} 
+          onCancel={() => setIsBooking(false)}
+          preselectedRoomId={roomId}
         />
       </div>
     );
