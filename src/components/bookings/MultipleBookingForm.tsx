@@ -416,6 +416,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                           value={selectedRoom?.numberOfPeople || 1}
                           onChange={(e) => handlePeopleChange(index, parseInt(e.target.value) || 1)}
                           min="1"
+                          max={getMaxGuests(room.category)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                           required
                         />
