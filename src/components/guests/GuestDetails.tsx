@@ -26,6 +26,7 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
   const [editedName, setEditedName] = useState('');
   const [editedNationalId, setEditedNationalId] = useState('');
   const [editedPhone, setEditedPhone] = useState('');
+  const [editedDateOfBirth, setEditedDateOfBirth] = useState('');
   
   const guest = getGuestById(guestId);
   const allBookings = getBookingsForGuest(guestId);
@@ -51,6 +52,7 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
     setEditedName(guest.name);
     setEditedNationalId(guest.nationalId);
     setEditedPhone(guest.phone);
+    setEditedDateOfBirth(guest.dateOfBirth || '');
     setIsEditing(true);
   };
 
@@ -82,8 +84,8 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
   };
 
   const handleSaveEdit = () => {
-    if (!editedName.trim() || !editedNationalId.trim() || !editedPhone.trim()) {
-      toast.error('All fields are required');
+    if (!editedName.trim() || !editedNationalId.trim() || !editedPhone.trim() || !editedDateOfBirth.trim()) {
+      toast.error('All fields including date of birth are required');
       return;
     }
 
@@ -91,6 +93,7 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
       name: editedName.trim(),
       nationalId: editedNationalId.trim(),
       phone: editedPhone.trim(),
+      dateOfBirth: editedDateOfBirth.trim(),
     });
 
     if (success) {
@@ -106,6 +109,7 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
     setEditedName('');
     setEditedNationalId('');
     setEditedPhone('');
+    setEditedDateOfBirth('');
   };
 
   const handleCreateBooking = () => {
@@ -211,6 +215,18 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
                     />
                   </div>
                   
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date of Birth
+                    </label>
+                    <input
+                      type="date"
+                      value={editedDateOfBirth}
+                      onChange={(e) => setEditedDateOfBirth(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                    />
+                  </div>
+                  
                   <div className="flex justify-end space-x-2 pt-4">
                     <button
                       onClick={handleCancelEdit}
@@ -246,8 +262,18 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
                     </div>
                   </div>
                   
+                  {guest.dateOfBirth && (
+                    <div className="flex items-center">
+                      <Calendar className="h-5 w-5 text-gray-500 mr-3" />
+                      <div>
+                        <p className="text-sm text-gray-600">Date of Birth</p>
+                        <p className="font-medium">{format(parseISO(guest.dateOfBirth), 'dd/MM/yyyy')}</p>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="flex items-center">
-                    <Calendar className="h-5 w-5 text-gray-500 mr-3" />
+                    <User className="h-5 w-5 text-gray-500 mr-3" />
                     <div>
                       <p className="text-sm text-gray-600">Total Bookings</p>
                       <p className="font-medium">{totalBookings}</p>

@@ -26,6 +26,7 @@ export interface Guest {
   name: string;
   nationalId: string;
   phone: string;
+  dateOfBirth?: string; // ISO date string (YYYY-MM-DD)
 }
 
 export interface Booking {

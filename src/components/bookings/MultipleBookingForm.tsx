@@ -30,6 +30,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
   const [guestName, setGuestName] = useState(prefilledGuest?.name || '');
   const [nationalId, setNationalId] = useState(prefilledGuest?.nationalId || '');
   const [phone, setPhone] = useState(prefilledGuest?.phone || '');
+  const [dateOfBirth, setDateOfBirth] = useState(prefilledGuest?.dateOfBirth || '');
   const [bookingDate, setBookingDate] = useState(today);
   const [durationDays, setDurationDays] = useState('1');
   const [numberOfRooms, setNumberOfRooms] = useState('1');
@@ -111,6 +112,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       if (existingGuest) {
         setGuestName(existingGuest.name);
         setPhone(existingGuest.phone);
+        setDateOfBirth(existingGuest.dateOfBirth || '');
       }
     }
   }, [nationalId, getAllGuests, prefilledGuest]);
@@ -189,8 +191,8 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       return;
     }
     
-    if (!guestName || !nationalId || !phone || !bookingDate || !durationDays || !totalAmount) {
-      toast.error('Please fill in all required fields');
+    if (!guestName || !nationalId || !phone || !dateOfBirth || !bookingDate || !durationDays || !totalAmount) {
+      toast.error('Please fill in all required fields including date of birth');
       return;
     }
     
@@ -218,6 +220,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       name: guestName,
       nationalId,
       phone,
+      dateOfBirth,
     });
 
     // Create separate booking for each room
@@ -315,6 +318,21 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                 id="phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                disabled={!!prefilledGuest}
+                required
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-1">
+                Date of Birth*
+              </label>
+              <input
+                type="date"
+                id="dateOfBirth"
+                value={dateOfBirth}
+                onChange={(e) => setDateOfBirth(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
                 disabled={!!prefilledGuest}
                 required

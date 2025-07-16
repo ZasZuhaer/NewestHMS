@@ -19,18 +19,21 @@ const initialGuests: Guest[] = [
     name: 'Ahmed Khan',
     nationalId: 'BX782435',
     phone: '01712345678',
+    dateOfBirth: '1985-03-15',
   },
   {
     id: '2',
     name: 'Fatima Rahman',
     nationalId: 'AZ567890',
     phone: '01898765432',
+    dateOfBirth: '1990-07-22',
   },
   {
     id: '3',
     name: 'Kamal Hossain',
     nationalId: 'CY123456',
     phone: '01612345678',
+    dateOfBirth: '1978-11-08',
   },
 ];
 
@@ -89,9 +92,16 @@ export const useGuestStore = create<GuestState>((set, get) => ({
     );
     
     if (existingGuest) {
-      // If phone number has changed, update it
+      // If phone number or date of birth has changed, update them
+      const updates: Partial<Guest> = {};
       if (existingGuest.phone !== guestData.phone) {
-        get().updateGuest(existingGuest.id, { phone: guestData.phone });
+        updates.phone = guestData.phone;
+      }
+      if (existingGuest.dateOfBirth !== guestData.dateOfBirth) {
+        updates.dateOfBirth = guestData.dateOfBirth;
+      }
+      if (Object.keys(updates).length > 0) {
+        get().updateGuest(existingGuest.id, updates);
       }
       return existingGuest.id;
     }
