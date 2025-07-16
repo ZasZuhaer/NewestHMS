@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, Plus, X } from 'lucide-react';
 import { Guest } from '../../types';
+import { RoomCategory } from '../../types';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useGuestStore } from '../../store/useGuestStore';
 import { useRoomStore } from '../../store/useRoomStore';
