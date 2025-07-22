@@ -49,6 +49,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
   const [preselectedRoomUnavailable, setPreselectedRoomUnavailable] = useState(false);
   const [showGuestSelection, setShowGuestSelection] = useState(false);
   const [additionalGuests, setAdditionalGuests] = useState<AdditionalGuest[]>([]);
+  const [selectedGuestIndex, setSelectedGuestIndex] = useState<number | null>(null);
   
   const [availabilityErrors, setAvailabilityErrors] = useState<string[]>([]);
   
@@ -76,6 +77,18 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
     setNationalId(guest.nationalId);
     setPhone(guest.phone);
     setDateOfBirth(guest.dateOfBirth || '');
+  };
+  
+  const handleSelectAdditionalGuest = (guest: Guest, index: number) => {
+    const updatedGuests = [...additionalGuests];
+    updatedGuests[index] = {
+      ...updatedGuests[index],
+      name: guest.name,
+      nationalId: guest.nationalId,
+      phone: guest.phone,
+      dateOfBirth: guest.dateOfBirth || '',
+    };
+    setAdditionalGuests(updatedGuests);
   };
   
   const handleAddGuest = () => {
@@ -430,14 +443,29 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
           {additionalGuests.map((guest, index) => (
             <div key={guest.id} className="bg-gray-50 p-4 rounded-lg mb-4">
               <div className="flex items-center justify-between mb-3">
-                <h4 className="font-medium">Guest {index + 2}</h4>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveGuest(index)}
-                  className="p-1 text-red-600 hover:bg-red-100 rounded-full"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+                <div className="flex items-center space-x-3">
+                  <h4 className="font-medium">Guest {index + 2}</h4>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedGuestIndex(index);
+                      setShowGuestSelection(true);
+                    }}
+                    className="inline-flex items-center px-2 py-1 text-xs border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                  >
+                    <Users className="h-3 w-3 mr-1" />
+                    Select Previous Guest
+                  </button>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveGuest(index)}
+                    className="p-1 text-red-600 hover:bg-red-100 rounded-full"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -716,8 +744,19 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       
       <GuestSelectionModal
         isOpen={showGuestSelection}
-        onClose={() => setShowGuestSelection(false)}
-        onSelectGuest={handleSelectGuest}
+        onClose={() => {
+          setShowGuestSelection(false);
+          setSelectedGuestIndex(null);
+        }}
+        onSelectGuest={(guest) => {
+          if (selectedGuestIndex !== null) {
+            handleSelectAdditionalGuest(guest, selectedGuestIndex);
+          } else {
+            handleSelectGuest(guest);
+          }
+          setShowGuestSelection(false);
+          setSelectedGuestIndex(null);
+        }}
       />
     </div>
   );
