@@ -78,6 +78,10 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onCreateBooki
     }
   };
   
+  const handleBookingClick = (bookingId: string) => {
+    setSelectedBookingId(bookingId);
+  };
+  
   const handleRoomUpdated = () => {
     setIsEditing(false);
     toast.success("Room updated successfully");
