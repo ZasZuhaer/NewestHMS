@@ -329,7 +329,7 @@ const BookingDetailsPage: React.FC<BookingDetailsPageProps> = ({ bookingId, onBa
                 <h4 className="text-lg font-semibold mb-3 text-gray-700">Guest 1</h4>
                 }
                 {allBookingGuests.map((guest, index) => (
-                  <div key={guest.id} className={`${index > 0 ? 'pt-4 border-t border-gray-200' : ''}`}>
+                  <div key={guest.id} className={`${index > 0 ? 'pt-1 border-t border-gray-200' : ''}`}>
                     {index > 0 && (
                       <h4 className="text-lg font-semibold mb-3 text-gray-700">Guest {index + 1}</h4>
                     )}
