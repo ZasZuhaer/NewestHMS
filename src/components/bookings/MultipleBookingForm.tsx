@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ArrowLeft, Plus, X, Users } from 'lucide-react';
+import { ArrowLeft, Plus, X, Users, UserPlus } from 'lucide-react';
 import { Guest } from '../../types';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useGuestStore } from '../../store/useGuestStore';
@@ -12,6 +12,14 @@ interface SelectedRoom {
   id: string;
   roomNumber: string;
   numberOfPeople: number;
+}
+
+interface AdditionalGuest {
+  id: string;
+  name: string;
+  nationalId: string;
+  phone: string;
+  dateOfBirth: string;
 }
 
 interface MultipleBookingFormProps {
@@ -40,6 +48,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
   const [paidAmount, setPaidAmount] = useState('');
   const [preselectedRoomUnavailable, setPreselectedRoomUnavailable] = useState(false);
   const [showGuestSelection, setShowGuestSelection] = useState(false);
+  const [additionalGuests, setAdditionalGuests] = useState<AdditionalGuest[]>([]);
   
   const [availabilityErrors, setAvailabilityErrors] = useState<string[]>([]);
   
@@ -67,6 +76,27 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
     setNationalId(guest.nationalId);
     setPhone(guest.phone);
     setDateOfBirth(guest.dateOfBirth || '');
+  };
+  
+  const handleAddGuest = () => {
+    const newGuest: AdditionalGuest = {
+      id: `temp-${Date.now()}`,
+      name: '',
+      nationalId: '',
+      phone: '',
+      dateOfBirth: '',
+    };
+    setAdditionalGuests([...additionalGuests, newGuest]);
+  };
+  
+  const handleRemoveGuest = (index: number) => {
+    setAdditionalGuests(additionalGuests.filter((_, i) => i !== index));
+  };
+  
+  const handleGuestChange = (index: number, field: keyof AdditionalGuest, value: string) => {
+    const updatedGuests = [...additionalGuests];
+    updatedGuests[index] = { ...updatedGuests[index], [field]: value };
+    setAdditionalGuests(updatedGuests);
   };
   
   // Update selected rooms when number of rooms changes
@@ -224,13 +254,34 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       return;
     }
     
+    // Validate additional guests
+    for (let i = 0; i < additionalGuests.length; i++) {
+      const guest = additionalGuests[i];
+      if (!guest.name.trim() || !guest.nationalId.trim() || !guest.phone.trim() || !guest.dateOfBirth.trim()) {
+        toast.error(`Please fill in all fields for Guest ${i + 2}`);
+        return;
+      }
+    }
+    
     // Create or find guest
-    const guestId = findOrCreateGuest({
+    const primaryGuestId = findOrCreateGuest({
       name: guestName,
       nationalId,
       phone,
       dateOfBirth,
     });
+    
+    // Create or find additional guests
+    const additionalGuestIds = additionalGuests.map(guest => 
+      findOrCreateGuest({
+        name: guest.name.trim(),
+        nationalId: guest.nationalId.trim(),
+        phone: guest.phone.trim(),
+        dateOfBirth: guest.dateOfBirth.trim(),
+      })
+    );
+    
+    const allGuestIds = [primaryGuestId, ...additionalGuestIds];
 
     // Create separate booking for each room
     const totalAmountNum = parseFloat(totalAmount);
@@ -244,10 +295,10 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       try {
         addBooking({
           roomId: room.id,
-          guestId,
-          guestName,
-          nationalId,
-          phone,
+          guestIds: allGuestIds,
+          primaryGuestName: guestName,
+          primaryNationalId: nationalId,
+          primaryPhone: phone,
           numberOfPeople: room.numberOfPeople,
           totalAmount: amountPerRoom,
           paidAmount: paidPerRoom,
@@ -360,6 +411,90 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
               />
             </div>
           </div>
+        </div>
+        
+        {/* Additional Guests */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-medium">Additional Guests (Optional)</h3>
+            <button
+              type="button"
+              onClick={handleAddGuest}
+              className="inline-flex items-center px-3 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+            >
+              <UserPlus className="h-4 w-4 mr-1" />
+              Add Guest
+            </button>
+          </div>
+          
+          {additionalGuests.map((guest, index) => (
+            <div key={guest.id} className="bg-gray-50 p-4 rounded-lg mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-medium">Guest {index + 2}</h4>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveGuest(index)}
+                  className="p-1 text-red-600 hover:bg-red-100 rounded-full"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Guest ID*
+                  </label>
+                  <input
+                    type="text"
+                    value={guest.nationalId}
+                    onChange={(e) => handleGuestChange(index, 'nationalId', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Guest Name*
+                  </label>
+                  <input
+                    type="text"
+                    value={guest.name}
+                    onChange={(e) => handleGuestChange(index, 'name', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Phone Number*
+                  </label>
+                  <input
+                    type="tel"
+                    value={guest.phone}
+                    onChange={(e) => handleGuestChange(index, 'phone', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date of Birth*
+                  </label>
+                  <input
+                    type="date"
+                    value={guest.dateOfBirth}
+                    onChange={(e) => handleGuestChange(index, 'dateOfBirth', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Booking Details */}

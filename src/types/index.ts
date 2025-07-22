@@ -32,10 +32,10 @@ export interface Guest {
 export interface Booking {
   id: string;
   roomId: string;
-  guestId: string;
-  guestName: string;
-  nationalId: string;
-  phone: string;
+  guestIds: string[];
+  primaryGuestName: string;
+  primaryNationalId: string;
+  primaryPhone: string;
   numberOfPeople: number;
   totalAmount: number;
   paidAmount: number;

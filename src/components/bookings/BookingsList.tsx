@@ -55,9 +55,9 @@ const BookingsList: React.FC = () => {
 
   const filteredBookings = sortedBookings.filter(booking => {
     const searchMatch = !searchTerm || (
-      booking.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.nationalId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.phone.toLowerCase().includes(searchTerm.toLowerCase())
+      booking.primaryGuestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.primaryNationalId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.primaryPhone.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const room = getRoomById(booking.roomId);

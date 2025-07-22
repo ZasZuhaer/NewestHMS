@@ -35,10 +35,10 @@ const initialBookings: Booking[] = [
   {
     id: '1',
     roomId: '1',
-    guestId: '1',
-    guestName: 'Ahmed Khan',
-    nationalId: 'BX782435',
-    phone: '01712345678',
+    guestIds: ['1'],
+    primaryGuestName: 'Ahmed Khan',
+    primaryNationalId: 'BX782435',
+    primaryPhone: '01712345678',
     numberOfPeople: 2,
     totalAmount: 5000,
     paidAmount: 2500,
@@ -49,10 +49,10 @@ const initialBookings: Booking[] = [
   {
     id: '2',
     roomId: '2',
-    guestId: '2',
-    guestName: 'Fatima Rahman',
-    nationalId: 'AZ567890',
-    phone: '01898765432',
+    guestIds: ['2'],
+    primaryGuestName: 'Fatima Rahman',
+    primaryNationalId: 'AZ567890',
+    primaryPhone: '01898765432',
     numberOfPeople: 2,
     totalAmount: 6000,
     paidAmount: 6000,
@@ -62,10 +62,10 @@ const initialBookings: Booking[] = [
   {
     id: '3',
     roomId: '3',
-    guestId: '3',
-    guestName: 'Kamal Hossain',
-    nationalId: 'CY123456',
-    phone: '01612345678',
+    guestIds: ['3'],
+    primaryGuestName: 'Kamal Hossain',
+    primaryNationalId: 'CY123456',
+    primaryPhone: '01612345678',
     numberOfPeople: 4,
     totalAmount: 8000,
     paidAmount: 4000,
@@ -129,7 +129,7 @@ export const useBookingStore = create<BookingState>((set, get) => ({
   },
 
   getBookingsForGuest: (guestId) => {
-    return get().bookings.filter((booking) => booking.guestId === guestId);
+    return get().bookings.filter((booking) => booking.guestIds.includes(guestId));
   },
 
   getAllBookings: () => {

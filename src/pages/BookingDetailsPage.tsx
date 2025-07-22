@@ -15,7 +15,7 @@ interface BookingDetailsPageProps {
 
 const BookingDetailsPage: React.FC<BookingDetailsPageProps> = ({ bookingId, onBack, onUpdate }) => {
   const { getBookingById, checkIn, checkOut, updateBooking, getCurrentBookingsForRoom, isRoomAvailable, requestCancellation, getCancellationRequestForBooking, cancelBooking } = useBookingStore();
-  const { getGuestById } = useGuestStore();
+  const { getGuestById, getAllGuests } = useGuestStore();
   const { getRoomById } = useRoomStore();
   const { getCurrentUserRole, currentUser } = useAuthStore();
   
@@ -27,15 +27,16 @@ const BookingDetailsPage: React.FC<BookingDetailsPageProps> = ({ bookingId, onBa
   const [action, setAction] = useState<'checkIn' | 'checkOut' | null>(null);
   
   const booking = getBookingById(bookingId);
-  const guest = booking ? getGuestById(booking.guestId) : null;
+  const primaryGuest = booking ? getGuestById(booking.guestIds[0]) : null;
+  const allBookingGuests = booking ? booking.guestIds.map(id => getGuestById(id)).filter(Boolean) : [];
   const room = booking ? getRoomById(booking.roomId) : null;
   const userRole = getCurrentUserRole();
   const cancellationRequest = booking ? getCancellationRequestForBooking(booking.id) : null;
   
-  if (!booking || !guest || !room) {
+  if (!booking || !primaryGuest || !room) {
     return (
       <div className="p-8 text-center">
-        <p className="text-red-500">Booking, guest, or room not found</p>
+        <p className="text-red-500">Booking, primary guest, or room not found</p>
         <button 
           onClick={onBack}
           className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
@@ -314,42 +315,59 @@ const BookingDetailsPage: React.FC<BookingDetailsPageProps> = ({ bookingId, onBa
             
             {/* Guest Information */}
             <div>
-              <h2 className="text-2xl font-bold mb-6">Guest Information</h2>
+              <h2 className="text-2xl font-bold mb-6">
+                Guest Information 
+                {allBookingGuests.length > 1 && (
+                  <span className="text-lg font-normal text-gray-600 ml-2">
+                    ({allBookingGuests.length} guests)
+                  </span>
+                )}
+              </h2>
               
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <User className="h-5 w-5 text-gray-500 mr-3" />
-                  <div>
-                    <p className="text-sm text-gray-600">Guest Name</p>
-                    <p className="font-medium">{guest.name}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center">
-                  <CreditCard className="h-5 w-5 text-gray-500 mr-3" />
-                  <div>
-                    <p className="text-sm text-gray-600">Guest ID</p>
-                    <p className="font-medium">{guest.nationalId}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center">
-                  <Phone className="h-5 w-5 text-gray-500 mr-3" />
-                  <div>
-                    <p className="text-sm text-gray-600">Phone Number</p>
-                    <p className="font-medium">{guest.phone}</p>
-                  </div>
-                </div>
-                
-                {guest.dateOfBirth && (
-                  <div className="flex items-center">
-                    <Calendar className="h-5 w-5 text-gray-500 mr-3" />
-                    <div>
-                      <p className="text-sm text-gray-600">Date of Birth</p>
-                      <p className="font-medium">{formatDate(guest.dateOfBirth)}</p>
+              <div className="space-y-6">
+                {allBookingGuests.map((guest, index) => (
+                  <div key={guest.id} className={`${index > 0 ? 'pt-4 border-t border-gray-200' : ''}`}>
+                    {index > 0 && (
+                      <h4 className="text-lg font-semibold mb-3 text-gray-700">Guest {index + 1}</h4>
+                    )}
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center">
+                        <User className="h-5 w-5 text-gray-500 mr-3" />
+                        <div>
+                          <p className="text-sm text-gray-600">Guest Name</p>
+                          <p className="font-medium">{guest.name}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <CreditCard className="h-5 w-5 text-gray-500 mr-3" />
+                        <div>
+                          <p className="text-sm text-gray-600">Guest ID</p>
+                          <p className="font-medium">{guest.nationalId}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <Phone className="h-5 w-5 text-gray-500 mr-3" />
+                        <div>
+                          <p className="text-sm text-gray-600">Phone Number</p>
+                          <p className="font-medium">{guest.phone}</p>
+                        </div>
+                      </div>
+                      
+                      {guest.dateOfBirth && (
+                        <div className="flex items-center">
+                          <Calendar className="h-5 w-5 text-gray-500 mr-3" />
+                          <div>
+                            <p className="text-sm text-gray-600">Date of Birth</p>
+                            <p className="font-medium">{formatDate(guest.dateOfBirth)}</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                )}
+                ))}
               </div>
               
               {/* Action Buttons */}

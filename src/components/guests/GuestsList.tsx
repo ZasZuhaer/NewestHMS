@@ -148,7 +148,7 @@ const sortedGuests = [...filteredGuests].sort((a, b) => {
                       <ul className="text-xs text-teal-700 space-y-1">
                         {activeBookings.slice(0, 2).map(booking => (
                           <li key={booking.id}>
-                            Room: {getRoomById(booking.roomId).roomNumber}, Check-in: {format(parseISO(booking.checkInDateTime!), 'dd/MM/yyyy')}
+                            Room: {getRoomById(booking.roomId)?.roomNumber}, Check-in: {format(parseISO(booking.checkInDateTime!), 'dd/MM/yyyy')}
                           </li>
                         ))}
                         {activeBookings.length > 2 && (
@@ -167,7 +167,7 @@ const sortedGuests = [...filteredGuests].sort((a, b) => {
                       <ul className="text-xs text-gray-600 space-y-1">
                         {futureBookings.slice(0, 2).map(booking => (
                           <li key={booking.id}>
-                            Room: {getRoomById(booking.roomId).roomNumber}, {format(parseISO(booking.bookingDate), 'dd/MM/yyyy')} 
+                            Room: {getRoomById(booking.roomId)?.roomNumber}, {format(parseISO(booking.bookingDate), 'dd/MM/yyyy')} 
                             ({booking.durationDays} days)
                           </li>
                         ))}
@@ -186,7 +186,7 @@ const sortedGuests = [...filteredGuests].sort((a, b) => {
                       <ul className="text-xs text-gray-600 space-y-1">
                         {pastBookings.slice(0, 2).map(booking => (
                           <li key={booking.id}>
-                            Room: {getRoomById(booking.roomId).roomNumber}, {format(parseISO(booking.bookingDate), 'dd/MM/yyyy')} 
+                            Room: {getRoomById(booking.roomId)?.roomNumber}, {format(parseISO(booking.bookingDate), 'dd/MM/yyyy')} 
                             ({booking.durationDays} days)
                           </li>
                         ))}

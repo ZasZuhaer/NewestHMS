@@ -211,11 +211,18 @@ const BookingCard: React.FC<BookingCardProps> = ({
     <div className="grid grid-cols-3 gap-1 items-center w-full mr-6">
 
     <div className="flex flex-col gap-1">
-      <h3 className="text-md font-semibold">{booking.guestName}</h3>
+      <h3 className="text-md font-semibold">
+        {booking.primaryGuestName}
+        {booking.guestIds.length > 1 && (
+          <span className="ml-2 text-sm font-normal text-gray-600">
+            +{booking.guestIds.length - 1}
+          </span>
+        )}
+      </h3>
     
       <div className="flex items-center gap-1 text-xs text-gray-600">
         <User className="w-5 h-5 text-gray-400" />
-        <span>ID: {booking.nationalId}</span>
+        <span>ID: {booking.primaryNationalId}</span>
       </div>
 
       <div className="flex items-center gap-1 text-xs text-gray-600">
@@ -307,7 +314,14 @@ const BookingCard: React.FC<BookingCardProps> = ({
           
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h3 className="text-lg font-semibold">{booking.guestName}</h3>
+              <h3 className="text-lg font-semibold">
+                {booking.primaryGuestName}
+                {booking.guestIds.length > 1 && (
+                  <span className="ml-2 text-sm font-normal text-gray-600">
+                    +{booking.guestIds.length - 1}
+                  </span>
+                )}
+              </h3>
               {showRoom && (
                 <p className="text-sm text-gray-600">
                   Room {roomNumber ?? booking.roomId}
@@ -322,7 +336,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
           <div className="grid grid-cols-2 gap-2 mb-3">
             <div className="flex items-center text-sm text-gray-700">
               <User className="h-4 w-4 mr-1 text-gray-500" />
-              <span>ID: {booking.nationalId}</span>
+              <span>ID: {booking.primaryNationalId}</span>
             </div>
             <div className="flex items-center text-sm text-gray-700">
               <Users className="h-4 w-4 mr-1 text-gray-500" />
