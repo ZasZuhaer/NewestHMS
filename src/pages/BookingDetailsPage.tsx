@@ -325,6 +325,9 @@ const BookingDetailsPage: React.FC<BookingDetailsPageProps> = ({ bookingId, onBa
               </h2>
               
               <div className="space-y-6">
+                {allBookingGuests > 1 &&
+                <h4 className="text-lg font-semibold mb-3 text-gray-700">Guest 1
+                }
                 {allBookingGuests.map((guest, index) => (
                   <div key={guest.id} className={`${index > 0 ? 'pt-4 border-t border-gray-200' : ''}`}>
                     {index > 0 && (
