@@ -315,7 +315,7 @@ const BookingDetailsPage: React.FC<BookingDetailsPageProps> = ({ bookingId, onBa
             
             {/* Guest Information */}
             <div>
-              <h2 className="text-2xl font-bold mb-6">
+              <h2 className="text-2xl font-bold mb-10">
                 Guest Information 
                 {allBookingGuests.length > 1 && (
                   <span className="text-lg font-normal text-gray-600 ml-2">
