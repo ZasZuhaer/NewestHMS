@@ -356,7 +356,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
               <button
                 type="button"
                 onClick={() => setShowGuestSelection(true)}
-                className="inline-flex items-center px-3 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                className="inline-flex items-center px-2 py-1 text-xs border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
               >
                 <Users className="h-4 w-4 mr-1" />
                 Select Previous Guest
