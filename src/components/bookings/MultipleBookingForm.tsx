@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ArrowLeft, Plus, X } from 'lucide-react';
+import { ArrowLeft, Plus, X, Users } from 'lucide-react';
 import { Guest } from '../../types';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useGuestStore } from '../../store/useGuestStore';
 import { useRoomStore } from '../../store/useRoomStore';
+import GuestSelectionModal from './GuestSelectionModal';
 import { format, addDays, parseISO } from 'date-fns';
 import toast from 'react-hot-toast';
 
@@ -38,6 +39,7 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
   const [totalAmount, setTotalAmount] = useState('');
   const [paidAmount, setPaidAmount] = useState('');
   const [preselectedRoomUnavailable, setPreselectedRoomUnavailable] = useState(false);
+  const [showGuestSelection, setShowGuestSelection] = useState(false);
   
   const [availabilityErrors, setAvailabilityErrors] = useState<string[]>([]);
   
@@ -59,6 +61,13 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       return isRoomAvailable(room.id, bookingDate, endDateValue);
     });
   }, [rooms, bookingDate, durationDays, isRoomAvailable]);
+  
+  const handleSelectGuest = (guest: Guest) => {
+    setGuestName(guest.name);
+    setNationalId(guest.nationalId);
+    setPhone(guest.phone);
+    setDateOfBirth(guest.dateOfBirth || '');
+  };
   
   // Update selected rooms when number of rooms changes
   useEffect(() => {
@@ -277,7 +286,19 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Guest Information */}
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="font-medium mb-4">Guest Information</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-medium">Guest Information</h3>
+            {!prefilledGuest && (
+              <button
+                type="button"
+                onClick={() => setShowGuestSelection(true)}
+                className="inline-flex items-center px-3 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+              >
+                <Users className="h-4 w-4 mr-1" />
+                Select Previous Guest
+              </button>
+            )}
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label htmlFor="nationalId" className="block text-sm font-medium text-gray-700 mb-1">
@@ -557,6 +578,12 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
           </button>
         </div>
       </form>
+      
+      <GuestSelectionModal
+        isOpen={showGuestSelection}
+        onClose={() => setShowGuestSelection(false)}
+        onSelectGuest={handleSelectGuest}
+      />
     </div>
   );
 };

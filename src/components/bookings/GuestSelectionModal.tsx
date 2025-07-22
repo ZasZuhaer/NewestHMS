@@ -1,0 +1,246 @@
+import React, { useState } from 'react';
+import { X, Search, User, Phone, CreditCard, Calendar } from 'lucide-react';
+import { Guest } from '../../types';
+import { useGuestStore } from '../../store/useGuestStore';
+import { useBookingStore } from '../../store/useBookingStore';
+import { useRoomStore } from '../../store/useRoomStore';
+import { format, parseISO } from 'date-fns';
+
+interface GuestSelectionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectGuest: (guest: Guest) => void;
+}
+
+const GuestSelectionModal: React.FC<GuestSelectionModalProps> = ({
+  isOpen,
+  onClose,
+  onSelectGuest,
+}) => {
+  const { getAllGuests } = useGuestStore();
+  const { getBookingsForGuest } = useBookingStore();
+  const { getRoomById } = useRoomStore();
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const guests = getAllGuests();
+  
+  const filteredGuests = guests.filter(guest => {
+    if (!searchTerm) return true;
+    
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      guest.name.toLowerCase().includes(searchLower) ||
+      guest.nationalId.toLowerCase().includes(searchLower) ||
+      guest.phone.toLowerCase().includes(searchLower)
+    );
+  });
+  
+  const sortedGuests = [...filteredGuests].sort((a, b) => {
+    const aBookings = getBookingsForGuest(a.id);
+    const bBookings = getBookingsForGuest(b.id);
+
+    // Helper to determine guest's booking category priority
+    const getGuestPriority = (bookings: Booking[]) => {
+      const activeBooking = bookings.find(b => b.checkInDateTime && !b.checkOutDateTime);
+      if (activeBooking) return 1;
+
+      const upcomingBooking = bookings.find(b => !b.checkInDateTime && !b.cancelledAt);
+      if (upcomingBooking) return 2;
+
+      const pastBooking = bookings.find(b => b.checkInDateTime && b.checkOutDateTime);
+      if (pastBooking) return 3;
+
+      const cancelledBooking = bookings.find(b => b.cancelledAt);
+      if (cancelledBooking) return 4;
+
+      return 5; // guests with no bookings
+    };
+
+    const priorityA = getGuestPriority(aBookings);
+    const priorityB = getGuestPriority(bBookings);
+
+    if (priorityA !== priorityB) return priorityA - priorityB;
+
+    // Sub-sorting inside each group
+    if (priorityA === 1) {
+      const aCheckIn = Math.max(...aBookings.filter(b => b.checkInDateTime && !b.checkOutDateTime).map(b => parseISO(b.checkInDateTime!).getTime()));
+      const bCheckIn = Math.max(...bBookings.filter(b => b.checkInDateTime && !b.checkOutDateTime).map(b => parseISO(b.checkInDateTime!).getTime()));
+      return bCheckIn - aCheckIn;
+    }
+
+    if (priorityA === 2) {
+      const aBookingDate = Math.min(...aBookings.filter(b => !b.checkInDateTime && !b.cancelledAt).map(b => parseISO(b.bookingDate).getTime()));
+      const bBookingDate = Math.min(...bBookings.filter(b => !b.checkInDateTime && !b.cancelledAt).map(b => parseISO(b.bookingDate).getTime()));
+      return aBookingDate - bBookingDate;
+    }
+
+    if (priorityA === 3) {
+      const aCheckout = Math.max(...aBookings.filter(b => b.checkOutDateTime).map(b => parseISO(b.checkOutDateTime!).getTime()));
+      const bCheckout = Math.max(...bBookings.filter(b => b.checkOutDateTime).map(b => parseISO(b.checkOutDateTime!).getTime()));
+      return bCheckout - aCheckout;
+    }
+
+    if (priorityA === 4) {
+      const aCancelled = Math.max(...aBookings.filter(b => b.cancelledAt).map(b => parseISO(b.cancelledAt!).getTime()));
+      const bCancelled = Math.max(...bBookings.filter(b => b.cancelledAt).map(b => parseISO(b.cancelledAt!).getTime()));
+      return bCancelled - aCancelled;
+    }
+
+    return 0;
+  });
+
+  const handleGuestClick = (guest: Guest) => {
+    onSelectGuest(guest);
+    onClose();
+    setSearchTerm(''); // Reset search when closing
+  };
+
+  const handleClose = () => {
+    onClose();
+    setSearchTerm(''); // Reset search when closing
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b">
+          <h2 className="text-xl font-bold">Select Previous Guest</h2>
+          <button
+            onClick={handleClose}
+            className="p-2 hover:bg-gray-100 rounded-full"
+          >
+            <X className="h-5 w-5 text-gray-500" />
+          </button>
+        </div>
+
+        <div className="p-6">
+          {/* Search Bar */}
+          <div className="flex items-center bg-white rounded-lg shadow-lg p-2 mb-6">
+            <Search className="h-5 w-5 text-gray-400 ml-2 mr-1" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by Name, ID or Phone..."
+              className="flex-1 border-0 focus:ring-0 focus:outline-none"
+            />
+          </div>
+
+          {/* Guest List */}
+          <div className="max-h-[60vh] overflow-y-auto">
+            {sortedGuests.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500">No guests found</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {sortedGuests.map(guest => {
+                  const bookings = getBookingsForGuest(guest.id);
+                  const activeBookings = bookings.filter(b => b.checkInDateTime && !b.checkOutDateTime);
+                  const pastBookings = bookings.filter(b => b.checkOutDateTime);
+                  const futureBookings = bookings.filter(b => !b.checkInDateTime && !b.cancelledAt);
+                  const cancelledBookings = bookings.filter(b => b.cancelledAt).length;
+
+                  return (
+                    <div 
+                      key={guest.id} 
+                      className="card card-hover cursor-pointer"
+                      onClick={() => handleGuestClick(guest)}
+                    >
+                      <div className="p-4">
+                        <h3 className="text-lg font-semibold mb-3">{guest.name}</h3>
+                        
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center text-sm">
+                            <CreditCard className="h-4 w-4 mr-2 text-gray-500" />
+                            <span className="text-gray-700">{guest.nationalId}</span>
+                          </div>
+                          <div className="flex items-center text-sm">
+                            <Phone className="h-4 w-4 mr-2 text-gray-500" />
+                            <span className="text-gray-700">{guest.phone}</span>
+                          </div>
+                          {guest.dateOfBirth && (
+                            <div className="flex items-center text-sm">
+                              <Calendar className="h-4 w-4 mr-2 text-gray-500" />
+                              <span className="text-gray-700">{format(parseISO(guest.dateOfBirth), 'dd/MM/yyyy')}</span>
+                            </div>
+                          )}
+                          <div className="flex items-center text-sm">
+                            <User className="h-4 w-4 mr-2 text-gray-500" />
+                            <span className="text-gray-700">
+                              {bookings.length} Bookings{cancelledBookings > 0 && ` (${cancelledBookings} Cancelled)`}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {activeBookings.length > 0 && (
+                          <div className="bg-teal-50 p-3 rounded-md mb-3">
+                            <p className="text-sm font-medium text-teal-800">Currently Staying</p>
+                            <ul className="text-xs text-teal-700 space-y-1">
+                              {activeBookings.slice(0, 2).map(booking => (
+                                <li key={booking.id}>
+                                  Room: {getRoomById(booking.roomId)?.roomNumber}, Check-in: {format(parseISO(booking.checkInDateTime!), 'dd/MM/yyyy')}
+                                </li>
+                              ))}
+                              {activeBookings.length > 2 && (
+                                <li className="text-teal-700 font-medium">
+                                  + {activeBookings.length - 2} more currently staying
+                                </li>
+                              )}
+                            </ul>
+                          </div>
+                        )}
+
+                        {futureBookings.length > 0 && (
+                          <div className="mb-3">
+                            <h4 className="text-sm font-medium mb-1">Upcoming Stays</h4>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              {futureBookings.slice(0, 2).map(booking => (
+                                <li key={booking.id}>
+                                  Room: {getRoomById(booking.roomId)?.roomNumber}, {format(parseISO(booking.bookingDate), 'dd/MM/yyyy')} 
+                                  ({booking.durationDays} days)
+                                </li>
+                              ))}
+                              {futureBookings.length > 2 && (
+                                <li className="text-teal-600 font-medium">
+                                  + {futureBookings.length - 2} more upcoming bookings
+                                </li>
+                              )}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        {pastBookings.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-medium mb-1">Past Stays</h4>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              {pastBookings.slice(0, 2).map(booking => (
+                                <li key={booking.id}>
+                                  Room: {getRoomById(booking.roomId)?.roomNumber}, {format(parseISO(booking.bookingDate), 'dd/MM/yyyy')} 
+                                  ({booking.durationDays} days)
+                                </li>
+                              ))}
+                              {pastBookings.length > 2 && (
+                                <li className="text-gray-500 font-medium">
+                                  + {pastBookings.length - 2} more past bookings
+                                </li>
+                              )}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GuestSelectionModal;
