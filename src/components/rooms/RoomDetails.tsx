@@ -20,11 +20,11 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onCreateBooki
   const { getRoomById, deleteRoom } = useRoomStore();
   const { getBookingsForRoom, getCurrentBookingsForRoom, getFutureBookingsForRoom } = useBookingStore();
   const { getCurrentUserRole } = useAuthStore();
-  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
   
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
   
   const room = getRoomById(roomId);
   const currentBookings = getCurrentBookingsForRoom(roomId);
