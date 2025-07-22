@@ -334,7 +334,7 @@ const BookingDetailsPage: React.FC<BookingDetailsPageProps> = ({ bookingId, onBa
                       <h4 className="text-lg font-semibold mb-3 text-gray-700">Guest {index + 1}</h4>
                     )}
                     
-                    <div className="space-y-1">
+                    <div className="space-y-10">
                       <div className="flex items-center">
                         <User className="h-5 w-5 text-gray-500 mr-3" />
                         <div>
