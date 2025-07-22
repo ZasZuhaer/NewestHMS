@@ -445,6 +445,9 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
                   <h4 className="font-medium">Guest {index + 2}</h4>
+                  
+                </div>
+                <div className="flex items-center space-x-2">
                   <button
                     type="button"
                     onClick={() => {
@@ -456,8 +459,6 @@ const MultipleBookingForm: React.FC<MultipleBookingFormProps> = ({ onSubmit, onC
                     <Users className="h-3 w-3 mr-1" />
                     Select Previous Guest
                   </button>
-                </div>
-                <div className="flex items-center space-x-2">
                   <button
                     type="button"
                     onClick={() => handleRemoveGuest(index)}
