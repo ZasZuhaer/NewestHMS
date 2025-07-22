@@ -6,6 +6,7 @@ import { useBookingStore } from '../../store/useBookingStore';
 import { useRoomStore } from '../../store/useRoomStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import BookingCard from '../bookings/BookingCard';
+import BookingDetailsPage from '../../pages/BookingDetailsPage';
 import MultipleBookingForm from '../bookings/MultipleBookingForm';
 import { format, parseISO } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -21,6 +22,7 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
   const { getRoomById } = useRoomStore();
   const { getCurrentUserRole } = useAuthStore();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isCreatingBooking, setIsCreatingBooking] = useState(false);
   const [editedName, setEditedName] = useState('');
@@ -83,6 +85,15 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
     setRefreshKey(prev => prev + 1);
   };
 
+  const handleBookingClick = (bookingId: string) => {
+    setSelectedBookingId(bookingId);
+  };
+
+  const handleBackFromBookingDetails = () => {
+    setSelectedBookingId(null);
+    setRefreshKey(prev => prev + 1);
+  };
+
   const handleSaveEdit = () => {
     if (!editedName.trim() || !editedNationalId.trim() || !editedPhone.trim() || !editedDateOfBirth.trim()) {
       toast.error('All fields including date of birth are required');
@@ -121,6 +132,16 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
     setRefreshKey(prev => prev + 1);
     toast.success('Bookings created successfully');
   };
+
+  if (selectedBookingId) {
+    return (
+      <BookingDetailsPage
+        bookingId={selectedBookingId}
+        onBack={handleBackFromBookingDetails}
+        onUpdate={handleBookingUpdated}
+      />
+    );
+  }
 
   const totalSpent = allBookings
     .filter(b => !b.cancelledAt)

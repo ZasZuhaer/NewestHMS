@@ -1,42 +1,51 @@
 import React, { useState } from 'react';
-import { Booking } from '../../types';
-import { User, Calendar, Clock, CreditCard, Users, X, Plus } from 'lucide-react';
+import { ArrowLeft, User, Phone, CreditCard, Calendar, Clock, Users, BedDouble, Plus, X } from 'lucide-react';
+import { useBookingStore } from '../store/useBookingStore';
+import { useGuestStore } from '../store/useGuestStore';
+import { useRoomStore } from '../store/useRoomStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { format, parseISO, addDays } from 'date-fns';
-import { useBookingStore } from '../../store/useBookingStore';
-import { useAuthStore } from '../../store/useAuthStore';
 import toast from 'react-hot-toast';
 
-interface BookingCardProps {
-  booking: Booking;
-  isActive: boolean;
-  showRoom?: boolean;
-  roomNumber?: string;
+interface BookingDetailsPageProps {
+  bookingId: string;
+  onBack: () => void;
   onUpdate?: () => void;
-  variant?: 'default' | 'list';  // ✅ new prop
-  onClick?: () => void;  // ✅ new prop for clicking the card
 }
 
-const BookingCard: React.FC<BookingCardProps> = ({
-  booking,
-  isActive,
-  showRoom = false,
-  roomNumber,
-  onUpdate,
-  variant = 'default', // ✅ default value
-  onClick, // ✅ new prop
-}) => {
-  const { checkIn, checkOut, updateBooking, getCurrentBookingsForRoom, isRoomAvailable, requestCancellation, getCancellationRequestForBooking, cancelBooking } = useBookingStore();
+const BookingDetailsPage: React.FC<BookingDetailsPageProps> = ({ bookingId, onBack, onUpdate }) => {
+  const { getBookingById, checkIn, checkOut, updateBooking, getCurrentBookingsForRoom, isRoomAvailable, requestCancellation, getCancellationRequestForBooking, cancelBooking } = useBookingStore();
+  const { getGuestById } = useGuestStore();
+  const { getRoomById } = useRoomStore();
   const { getCurrentUserRole, currentUser } = useAuthStore();
+  
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showExtendModal, setShowExtendModal] = useState(false);
-  const [paidAmount, setPaidAmount] = useState(booking.paidAmount.toString());
+  const [paidAmount, setPaidAmount] = useState('');
   const [extraDays, setExtraDays] = useState('1');
   const [extraAmount, setExtraAmount] = useState('0');
   const [action, setAction] = useState<'checkIn' | 'checkOut' | null>(null);
   
+  const booking = getBookingById(bookingId);
+  const guest = booking ? getGuestById(booking.guestId) : null;
+  const room = booking ? getRoomById(booking.roomId) : null;
   const userRole = getCurrentUserRole();
+  const cancellationRequest = booking ? getCancellationRequestForBooking(booking.id) : null;
   
-  const cancellationRequest = getCancellationRequestForBooking(booking.id);
+  if (!booking || !guest || !room) {
+    return (
+      <div className="p-8 text-center">
+        <p className="text-red-500">Booking, guest, or room not found</p>
+        <button 
+          onClick={onBack}
+          className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back
+        </button>
+      </div>
+    );
+  }
   
   const handleCheckIn = () => {
     const currentBookings = getCurrentBookingsForRoom(booking.roomId);
@@ -182,233 +191,214 @@ const BookingCard: React.FC<BookingCardProps> = ({
     const currentEndDate = addDays(parseISO(booking.bookingDate), booking.durationDays);
     return format(addDays(currentEndDate, parsedExtraDays), 'dd/MM/yyyy');
   };
+
+  const getStatusBadge = () => {
+    if (booking.cancelledAt) {
+      return <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800">Cancelled</span>;
+    }
+    if (booking.checkOutDateTime) {
+      return <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800">Checked Out</span>;
+    }
+    if (booking.checkInDateTime) {
+      return <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-red-100 text-red-800">Currently Staying</span>;
+    }
+    return <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-amber-100 text-amber-800">Upcoming</span>;
+  };
   
   return (
     <>
-      <div
-        className={`card border w-full ${onClick ? 'cursor-pointer hover:shadow-lg' : ''} ${
-          booking.cancelledAt
-            ? 'bg-white border-gray-300'
-            : booking.checkOutDateTime
-            ? 'bg-green-100 border-green-300'
-            : booking.checkInDateTime
-            ? 'bg-red-200 border-red-400'
-            : 'bg-amber-100 border-amber-300'
-        } ${variant === 'list' ? 'p-2' : 'p-3'}`}
-        onClick={onClick}
-      >
-
-
-
-
-{variant === 'list' ? (
-<>
-  <div className="flex w-full justify-between items-center">
-
-
-
-    {/* LEFT SIDE: All Info */}
-    <div className="grid grid-cols-3 gap-1 items-center w-full mr-6">
-
-    <div className="flex flex-col gap-1">
-      <h3 className="text-md font-semibold">{booking.guestName}</h3>
-    
-      <div className="flex items-center gap-1 text-xs text-gray-600">
-        <User className="w-5 h-5 text-gray-400" />
-        <span>ID: {booking.nationalId}</span>
-      </div>
-
-      <div className="flex items-center gap-1 text-xs text-gray-600">
-  <Users className="w-5 h-5 text-gray-400" />
-  <span>{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</span>
-</div>
-    </div>
-
-       
-
-    <div className="flex flex-col gap-1">
-
-      <h3 className="text-md font-semibold">Room {roomNumber ?? booking.roomId}</h3>
-      
-      <div className="flex items-center gap-1 text-xs text-gray-600">
-        <Calendar className="w-5 h-5 text-gray-400" /> 
-        <span>{formatDate(booking.bookingDate)} ({booking.durationDays} days)</span>
-      </div>
-
-      <div className="flex items-center gap-1 text-xs text-gray-900"> 
-  <CreditCard className="w-5 h-5 text-gray-400" />
-  <span>৳{booking.paidAmount} / ৳{booking.totalAmount}</span>
-</div>
-    </div> 
-
-          <div className="flex flex-col gap-1">
-          {booking.checkInDateTime && (
-            <div className="flex items-center text-xs text-gray-600 mt-2">
-              <Clock className="h-3 w-3 mr-1" />
-              <span>Checked in: {formatDateTime(booking.checkInDateTime)}</span>
-            </div>
-          )}
-
-          {booking.checkOutDateTime && (
-            <div className="flex items-center text-xs text-gray-600 mt-0">
-              <Clock className="h-3 w-3 mr-1" />
-              <span>Checked out: {formatDateTime(booking.checkOutDateTime)}</span>
-            </div>
-          )}
-
-          {cancellationRequest?.status === 'pending' && (
-        <div className="flex items-center justify-center bg-amber-100 text-amber-800 px-3 py-2 rounded-md text-xs w-36">
-
-
-          Cancellation request pending
-        </div> 
-      )}
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={onBack}
+              className="p-2 rounded-full hover:bg-gray-100"
+              aria-label="Back"
+            >
+              <ArrowLeft className="h-5 w-5 text-gray-600" />
+            </button>
             
-          
+            <div className="flex items-center space-x-3">
+              {getStatusBadge()}
+              <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${paymentStatusClass}`}>
+                {paymentStatus}
+              </span>
+            </div>
           </div>
-    
-
-
-    </div>
-
-    
-    {/* RIGHT SIDE: Buttons stacked vertically */}
-    <div className="flex flex-col gap-1 ml-auto">
-      {!booking.checkInDateTime && !booking.cancelledAt && (
-        <div className="flex flex-col items-center gap-1">
-  <button onClick={handleCheckIn} className="btn btn-primary w-28">Check In</button>
-
-  {(userRole === 'admin' || userRole === 'manager') && (
-    <button onClick={handleCancellation} className="btn btn-danger w-28" disabled={!!cancellationRequest?.status === 'pending'}>
-      {userRole === 'admin' ? 'Cancel' : 'Cancel'}
-    </button>
-  )}
-</div>
-
-      )} 
-
-      {booking.checkInDateTime && !booking.checkOutDateTime && (
-        <>
-          <button onClick={() => setShowExtendModal(true)} className="btn btn-secondary w-28">Extend</button>
-          <button onClick={handleCheckOut} className="btn btn-primary bg-blue-600 w-28">Check Out</button>
-        </>
-      )}
-      
-    </div>
-  </div>
-</>
-
-
-
-  ) : (
-    <>
-      {/* Your existing layout — keep as is */}
-
           
-          <div className="flex justify-between items-start mb-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Booking Information */}
             <div>
-              <h3 className="text-lg font-semibold">{booking.guestName}</h3>
-              {showRoom && (
-                <p className="text-sm text-gray-600">
-                  Room {roomNumber ?? booking.roomId}
-                </p>
-              )}
-            </div>
-            <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${paymentStatusClass}`}>
-              {paymentStatus}
-            </span>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-2 mb-3">
-            <div className="flex items-center text-sm text-gray-700">
-              <User className="h-4 w-4 mr-1 text-gray-500" />
-              <span>ID: {booking.nationalId}</span>
-            </div>
-            <div className="flex items-center text-sm text-gray-700">
-              <Users className="h-4 w-4 mr-1 text-gray-500" />
-              <span>{booking.numberOfPeople} {booking.numberOfPeople > 1 ? 'Guests' : 'Guest'}</span>
-            </div>
-            <div className="flex items-center text-sm text-gray-700">
-              <Calendar className="h-4 w-4 mr-1 text-gray-500" />
-              <span>{formatDate(booking.bookingDate)} ({booking.durationDays} days)</span>
-            </div>
-            <div className="flex items-center text-sm text-gray-700">
-              <CreditCard className="h-4 w-4 mr-1 text-gray-500" />
-              <span>৳{booking.paidAmount} / ৳{booking.totalAmount}</span>
-            </div>
-          </div>
-          
-          {booking.checkInDateTime && (
-            <div className="flex items-center text-xs text-gray-600 mt-2">
-              <Clock className="h-3 w-3 mr-1" />
-              <span>Checked in: {formatDateTime(booking.checkInDateTime)}</span>
-            </div>
-          )}
-          
-          {booking.checkOutDateTime && (
-            <div className="flex items-center text-xs text-gray-600 mt-1">
-              <Clock className="h-3 w-3 mr-1" />
-              <span>Checked out: {formatDateTime(booking.checkOutDateTime)}</span>
-            </div>
-          )}
-          
-          <div className="mt-4 space-y-2">
-            {!booking.checkInDateTime && !booking.cancelledAt && (
-              <>
-                <button
-                  onClick={handleCheckIn}
-                  className="btn btn-primary w-full"
-                >
-                  Check In
-                </button>
+              <h2 className="text-2xl font-bold mb-6">Booking Details</h2>
+              
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <BedDouble className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-600">Room</p>
+                    <p className="font-medium">Room {room.roomNumber} - {room.category}</p>
+                  </div>
+                </div>
                 
-                {(userRole === 'admin' || userRole === 'manager') && (
-                  <button
-                    onClick={handleCancellation}
-                    className="btn btn-danger w-full"
-                    disabled={!!cancellationRequest?.status === 'pending'}
-                  >
-                    {userRole === 'admin' ? 'Cancel Booking' : 'Request Cancellation'}
-                  </button>
+                <div className="flex items-center">
+                  <Calendar className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-600">Booking Date</p>
+                    <p className="font-medium">{formatDate(booking.bookingDate)}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center">
+                  <Clock className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-600">Duration</p>
+                    <p className="font-medium">{booking.durationDays} days</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center">
+                  <Users className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-600">Number of People</p>
+                    <p className="font-medium">{booking.numberOfPeople}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center">
+                  <CreditCard className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-600">Payment</p>
+                    <p className="font-medium">৳{booking.paidAmount} / ৳{booking.totalAmount}</p>
+                  </div>
+                </div>
+                
+                {booking.checkInDateTime && (
+                  <div className="flex items-center">
+                    <Clock className="h-5 w-5 text-gray-500 mr-3" />
+                    <div>
+                      <p className="text-sm text-gray-600">Check-in Time</p>
+                      <p className="font-medium">{formatDateTime(booking.checkInDateTime)}</p>
+                    </div>
+                  </div>
                 )}
-              </>
-            )}
-            
-            {booking.checkInDateTime && !booking.checkOutDateTime && (
-              <>
-                <button
-                  onClick={() => setShowExtendModal(true)}
-                  className="btn btn-secondary w-full"
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  Extend Stay
-                </button>
-                <button
-                  onClick={handleCheckOut}
-                  className="btn btn-primary w-full bg-blue-600 hover:bg-blue-700 focus:ring-blue-500" 
-                >
-                  Check Out
-                </button>
-              </>
-            )}
-
-            {booking.cancelledAt && (
-              <div className="bg-red-100 text-red-800 px-4 py-2 rounded-md text-sm">
-                Booking cancelled on {format(parseISO(booking.cancelledAt), 'dd/MM/yyyy HH:mm')}
+                
+                {booking.checkOutDateTime && (
+                  <div className="flex items-center">
+                    <Clock className="h-5 w-5 text-gray-500 mr-3" />
+                    <div>
+                      <p className="text-sm text-gray-600">Check-out Time</p>
+                      <p className="font-medium">{formatDateTime(booking.checkOutDateTime)}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {booking.cancelledAt && (
+                  <div className="bg-red-50 p-4 rounded-md">
+                    <p className="text-red-800 font-medium">Booking Cancelled</p>
+                    <p className="text-red-600 text-sm">
+                      Cancelled on {formatDateTime(booking.cancelledAt)}
+                    </p>
+                  </div>
+                )}
+                
+                {cancellationRequest?.status === 'pending' && (
+                  <div className="bg-amber-50 p-4 rounded-md">
+                    <p className="text-amber-800 font-medium">Cancellation Request Pending</p>
+                    <p className="text-amber-600 text-sm">
+                      Requested on {formatDateTime(cancellationRequest.requestedAt)}
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
             
-            {cancellationRequest?.status === 'pending' && (
-  <div className="flex item-center justify-center bg-amber-100 text-amber-800 px-4 py-2 rounded-md text-sm">
-    Cancellation request pending
-  </div>
-)}
+            {/* Guest Information */}
+            <div>
+              <h2 className="text-2xl font-bold mb-6">Guest Information</h2>
+              
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <User className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-600">Guest Name</p>
+                    <p className="font-medium">{guest.name}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center">
+                  <CreditCard className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-600">Guest ID</p>
+                    <p className="font-medium">{guest.nationalId}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center">
+                  <Phone className="h-5 w-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm text-gray-600">Phone Number</p>
+                    <p className="font-medium">{guest.phone}</p>
+                  </div>
+                </div>
+                
+                {guest.dateOfBirth && (
+                  <div className="flex items-center">
+                    <Calendar className="h-5 w-5 text-gray-500 mr-3" />
+                    <div>
+                      <p className="text-sm text-gray-600">Date of Birth</p>
+                      <p className="font-medium">{formatDate(guest.dateOfBirth)}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="mt-8 space-y-3">
+                {!booking.checkInDateTime && !booking.cancelledAt && (
+                  <>
+                    <button
+                      onClick={handleCheckIn}
+                      className="btn btn-primary w-full"
+                    >
+                      Check In
+                    </button>
+                    
+                    {(userRole === 'admin' || userRole === 'manager') && (
+                      <button
+                        onClick={handleCancellation}
+                        className="btn btn-danger w-full"
+                        disabled={!!cancellationRequest?.status === 'pending'}
+                      >
+                        {userRole === 'admin' ? 'Cancel Booking' : 'Request Cancellation'}
+                      </button>
+                    )}
+                  </>
+                )}
+                
+                {booking.checkInDateTime && !booking.checkOutDateTime && (
+                  <>
+                    <button
+                      onClick={() => setShowExtendModal(true)}
+                      className="btn btn-secondary w-full"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Extend Stay
+                    </button>
+                    <button
+                      onClick={handleCheckOut}
+                      className="btn btn-primary w-full bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+                    >
+                      Check Out
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-      </> 
-    )}
-</div>
+      </div>
 
-
+      {/* Payment Modal */}
       {showPaymentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
@@ -468,6 +458,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
         </div>
       )}
 
+      {/* Extend Stay Modal */}
       {showExtendModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
@@ -536,4 +527,4 @@ const BookingCard: React.FC<BookingCardProps> = ({
   );
 };
 
-export default BookingCard;
+export default BookingDetailsPage;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Booking } from '../../types';
 import BookingCard from './BookingCard';
+import BookingDetailsPage from '../../pages/BookingDetailsPage';
 import { useBookingStore } from '../../store/useBookingStore';
 import { useRoomStore } from '../../store/useRoomStore';
 import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
@@ -11,6 +12,7 @@ const BookingsList: React.FC = () => {
   const { getAllBookings } = useBookingStore();
   const { getRoomById } = useRoomStore();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -85,6 +87,25 @@ const BookingsList: React.FC = () => {
   const handleBookingUpdated = () => {
     setRefreshKey(prev => prev + 1);
   };
+
+  const handleBookingClick = (bookingId: string) => {
+    setSelectedBookingId(bookingId);
+  };
+
+  const handleBackToBookings = () => {
+    setSelectedBookingId(null);
+    setRefreshKey(prev => prev + 1); // Refresh the list when coming back
+  };
+
+  if (selectedBookingId) {
+    return (
+      <BookingDetailsPage
+        bookingId={selectedBookingId}
+        onBack={handleBackToBookings}
+        onUpdate={handleBookingUpdated}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -180,6 +201,7 @@ const BookingsList: React.FC = () => {
                 onUpdate={handleBookingUpdated}
                 roomNumber={room?.roomNumber}
                 variant={isSmallScreen ? "default" : "list"}
+                onClick={() => handleBookingClick(booking.id)}
               />
             );
           })}
