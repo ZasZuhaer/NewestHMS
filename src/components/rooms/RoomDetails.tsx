@@ -221,6 +221,7 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onCreateBooki
                       
                       isActive={true}
                       onUpdate={handleBookingUpdated}
+                      onClick={() => handleBookingClick(booking.id)}
                     />
                   ))}
                   
@@ -230,6 +231,7 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ roomId, onBack, onCreateBooki
                       booking={booking}
                       isActive={false}
                       onUpdate={handleBookingUpdated}
+                      onClick={() => handleBookingClick(booking.id)}
                     />
                   ))}
                 </>

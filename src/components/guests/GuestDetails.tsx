@@ -358,6 +358,7 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
                           showRoom={true}
                           roomNumber={room?.roomNumber}
                           onUpdate={handleBookingUpdated}
+                          onClick={() => handleBookingClick(booking.id)}
                         />
                       );
                     })}
@@ -383,6 +384,7 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
                           showRoom={true}
                           roomNumber={room?.roomNumber}
                           onUpdate={handleBookingUpdated}
+                          onClick={() => handleBookingClick(booking.id)}
                         />
                       );
                     })}
@@ -408,6 +410,7 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
                           showRoom={true}
                           roomNumber={room?.roomNumber}
                           onUpdate={handleBookingUpdated}
+                          onClick={() => handleBookingClick(booking.id)}
                         />
                       );
                     })}
@@ -433,6 +436,7 @@ const GuestDetails: React.FC<GuestDetailsProps> = ({ guestId, onBack }) => {
                           showRoom={true}
                           roomNumber={room?.roomNumber}
                           onUpdate={handleBookingUpdated}
+                          onClick={() => handleBookingClick(booking.id)}
                         />
                       );
                     })}
